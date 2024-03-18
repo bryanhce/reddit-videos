@@ -1,0 +1,41 @@
+av==11.0.0
+certifi==2024.2.2
+charset-normalizer==3.3.2
+click @ file:///home/conda/feedstock_root/build_artifacts/click_1692311806742/work
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
+coloredlogs==15.0.1
+ctranslate2==4.1.0
+decorator @ file:///home/conda/feedstock_root/build_artifacts/decorator_1641555617451/work
+faster-whisper @ https://github.com/guillaumekln/faster-whisper/archive/refs/heads/master.tar.gz#sha256=e9c21e8c788d651cf3c5a04e207242be9d68a3ab9efd92e1b73e10f36e311f3e
+filelock==3.13.1
+flatbuffers==24.3.7
+fsspec==2024.3.0
+gTTS @ file:///home/conda/feedstock_root/build_artifacts/gtts_1706551003314/work
+huggingface-hub==0.21.4
+humanfriendly==10.0
+idna==3.6
+imageio @ file:///home/conda/feedstock_root/build_artifacts/imageio_1676279494281/work
+imageio-ffmpeg @ file:///home/conda/feedstock_root/build_artifacts/imageio-ffmpeg_1694632425602/work
+moviepy @ file:///home/conda/feedstock_root/build_artifacts/moviepy_1665160419595/work
+mpmath==1.3.0
+numpy==1.26.4
+onnxruntime==1.17.1
+packaging==24.0
+pillow @ file:///private/var/folders/nz/j6p8yfhx1mv_0grj5xl4650h0000gp/T/abs_e02b4k5qik/croot/pillow_1707233036487/work
+praw @ file:///home/conda/feedstock_root/build_artifacts/praw_1695503763266/work
+prawcore @ file:///home/conda/feedstock_root/build_artifacts/prawcore_1697636127871/work
+proglog==0.1.9
+protobuf==5.26.0
+PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
+python-decouple @ file:///home/conda/feedstock_root/build_artifacts/python-decouple_1677787101602/work
+PyYAML==6.0.1
+requests==2.31.0
+setuptools==69.2.0
+sympy==1.12
+tokenizers==0.15.2
+tqdm==4.66.2
+typing_extensions==4.10.0
+update-checker @ file:///home/conda/feedstock_root/build_artifacts/update_checker_1596529541613/work
+urllib3==2.2.1
+websocket-client @ file:///home/conda/feedstock_root/build_artifacts/websocket-client_1701630677416/work
+wheel==0.42.0
