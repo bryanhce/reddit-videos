@@ -8,17 +8,13 @@ def create_word_level_JSON():
 
     segments, info = model.transcribe("../audio/0.mp3", word_timestamps=True)
     segments = list(segments)  # The transcription will actually run here.
-    for segment in segments:
-        for word in segment.words:
-            print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word))
 
     wordlevel_info = []
 
     for segment in segments:
         for word in segment.words:
+            # print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word))
             wordlevel_info.append({'word':word.word,'start':word.start,'end':word.end})
-
-    # print(wordlevel_info)
 
     # Store word-level timestamps into JSON file
     with open('../data.json', 'w') as f:
@@ -90,10 +86,10 @@ def create_caption(
         })
 
         word_clip = word_clip.set_position((x_pos, y_pos))
-        word_clip_space = word_clip_space.set_position((x_pos+ word_width, y_pos))
+        word_clip_space = word_clip_space.set_position((x_pos + word_width, y_pos))
 
-        x_pos = x_pos + word_width+ space_width
-        line_width = line_width+ word_width + space_width
+        x_pos = x_pos + word_width + space_width
+        line_width = line_width + word_width + space_width
     # TODO: try remove else block and running, should still work
     else:
         # Move to the next line
@@ -121,7 +117,7 @@ def create_caption(
     word_clips.append(word_clip_space)
 
     for highlight_word in xy_textclips_positions:
-        word_clip_highlight = TextClip(highlight_word['word'], font = font,fontsize=fontsize, color=highlight_color,stroke_color=stroke_color,stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
+        word_clip_highlight = TextClip(highlight_word['word'], font=font, fontsize=fontsize, color=highlight_color, stroke_color=stroke_color,stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
         word_clip_highlight = word_clip_highlight.set_position((highlight_word['x_pos'], highlight_word['y_pos']))
         word_clips.append(word_clip_highlight)
 
@@ -129,11 +125,11 @@ def create_caption(
 
 def create_video_with_subtitles(
         base_url,
-        font="Helvetica",
-        color='white',
-        highlight_color='yellow',
-        stroke_color='black',
-        stroke_width=1.5,
+        font,
+        color,
+        highlight_color,
+        stroke_color,
+        stroke_width,
         ):
     
     with open('../data.json', 'r') as f:
