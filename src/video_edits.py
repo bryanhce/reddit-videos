@@ -8,89 +8,17 @@ def create_word_level_JSON():
 
     segments, info = model.transcribe("../audio/0.mp3", word_timestamps=True)
     segments = list(segments)  # The transcription will actually run here.
-    for segment in segments:
-        for word in segment.words:
-            print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word))
 
     wordlevel_info = []
 
     for segment in segments:
         for word in segment.words:
+            # print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word))
             wordlevel_info.append({'word':word.word,'start':word.start,'end':word.end})
-
-    # print(wordlevel_info)
 
     # Store word-level timestamps into JSON file
     with open('../data.json', 'w') as f:
         json.dump(wordlevel_info, f, indent=4)
-
-'''
-TODO: delete if all code runs as expected
-def split_text_into_lines(data):
-    MaxChars = 30
-    #maxduration in seconds
-    MaxDuration = 2.5
-    #Split if nothing is spoken (gap) for these many seconds
-    MaxGap = 1.5
-
-    subtitles = []
-    line = []
-    line_duration = 0
-    line_chars = 0
-
-    for idx,word_data in enumerate(data):
-        word = word_data["word"]
-        start = word_data["start"]
-        end = word_data["end"]
-
-        line.append(word_data)
-        line_duration += end - start
-
-        temp = " ".join(item["word"] for item in line)
-
-
-        # Check if adding a new word exceeds the maximum character count or duration
-        new_line_chars = len(temp)
-
-        duration_exceeded = line_duration > MaxDuration
-        chars_exceeded = new_line_chars > MaxChars
-        if idx > 0:
-          gap = word_data['start'] - data[idx - 1]['end']
-          # print (word,start,end,gap)
-          maxgap_exceeded = gap > MaxGap
-        else:
-          maxgap_exceeded = False
-
-        if duration_exceeded or chars_exceeded or maxgap_exceeded:
-            if line:
-                subtitle_line = {
-                    "word": " ".join(item["word"] for item in line),
-                    "start": line[0]["start"],
-                    "end": line[-1]["end"],
-                    "textcontents": line
-                }
-                subtitles.append(subtitle_line)
-                line = []
-                line_duration = 0
-                line_chars = 0
-
-    if line:
-        subtitle_line = {
-            "word": " ".join(item["word"] for item in line),
-            "start": line[0]["start"],
-            "end": line[-1]["end"],
-            "textcontents": line
-        }
-        subtitles.append(subtitle_line)
-
-    return subtitles
-
-# def get_split_text():
-#     with open('data.json', 'r') as f:
-#         wordlevel_info = json.load(f)
-#     linelevel_subtitles = split_text_into_lines(wordlevel_info)
-#     # print(linelevel_subtitles)
-'''
 
 # Use Moviepy to create an audiogram with word-level highlights as they are spoken
 def create_caption(
@@ -100,7 +28,7 @@ def create_caption(
         color,
         highlight_color,
         stroke_color,
-        stroke_width
+        stroke_width,
     ):
 
     full_duration = textJSON['end'] - textJSON['start']
@@ -118,7 +46,7 @@ def create_caption(
 
     max_line_width = frame_width - 2 * (x_buffer)
 
-    fontsize = int(frame_height * 0.075) #7.5 percent of video height
+    fontsize = int(frame_height * 0.05) #7.5 percent of video height
 
     space_width = ""
     space_height = ""
@@ -131,8 +59,9 @@ def create_caption(
             fontsize=fontsize, 
             color=color,
             stroke_color=stroke_color,
-            stroke_width=stroke_width
+            stroke_width=stroke_width,
             ).set_start(textJSON['start']).set_duration(full_duration)
+            
     
     word_clip_space = TextClip(
             " ", 
@@ -157,15 +86,15 @@ def create_caption(
         })
 
         word_clip = word_clip.set_position((x_pos, y_pos))
-        word_clip_space = word_clip_space.set_position((x_pos+ word_width, y_pos))
+        word_clip_space = word_clip_space.set_position((x_pos + word_width, y_pos))
 
-        x_pos = x_pos + word_width+ space_width
-        line_width = line_width+ word_width + space_width
+        x_pos = x_pos + word_width + space_width
+        line_width = line_width + word_width + space_width
     # TODO: try remove else block and running, should still work
     else:
         # Move to the next line
         x_pos = 0
-        y_pos = y_pos+ word_height+10
+        y_pos = y_pos + word_height + 10
         line_width = word_width + space_width
 
         # Store info of each word_clip created
@@ -188,7 +117,7 @@ def create_caption(
     word_clips.append(word_clip_space)
 
     for highlight_word in xy_textclips_positions:
-        word_clip_highlight = TextClip(highlight_word['word'], font = font,fontsize=fontsize, color=highlight_color,stroke_color=stroke_color,stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
+        word_clip_highlight = TextClip(highlight_word['word'], font=font, fontsize=fontsize, color=highlight_color, stroke_color=stroke_color,stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
         word_clip_highlight = word_clip_highlight.set_position((highlight_word['x_pos'], highlight_word['y_pos']))
         word_clips.append(word_clip_highlight)
 
@@ -196,11 +125,11 @@ def create_caption(
 
 def create_video_with_subtitles(
         base_url,
-        font="Helvetica",
-        color='white',
-        highlight_color='yellow',
-        stroke_color='black',
-        stroke_width=1.5
+        font,
+        color,
+        highlight_color,
+        stroke_color,
+        stroke_width,
         ):
     
     with open('../data.json', 'r') as f:
@@ -219,7 +148,7 @@ def create_video_with_subtitles(
                                 color=color,
                                 highlight_color=highlight_color,
                                 stroke_color=stroke_color,
-                                stroke_width=stroke_width
+                                stroke_width=stroke_width,
                                 )
         max_width = 0
         max_height = 0
@@ -233,13 +162,12 @@ def create_video_with_subtitles(
 
             color_clip = ColorClip(
                             size=(int(max_width * 1.1), int(max_height * 1.1)),
-                            color=(64, 64, 64),
-                            # ismask=True
+                            color=(64, 64, 64)
                             )
-            color_clip = color_clip.set_opacity(.6)
-            color_clip = color_clip.set_start(obj['start']).set_duration(obj['end'] - obj['start'])
+            # for adjusting text background transparency
+            color_clip = color_clip.set_opacity(0)
 
-        # centered_clips = [each.set_position('center') for each in out_clips]
+            color_clip = color_clip.set_start(obj['start']).set_duration(obj['end'] - obj['start'])
 
         clip_to_overlay = CompositeVideoClip([color_clip]+ out_clips)
         clip_to_overlay = clip_to_overlay.set_position("center") # was previously 'bottom'
