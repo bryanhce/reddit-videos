@@ -1,2 +1,4 @@
 .env
 audio
+data.json
+video/output.mp4
