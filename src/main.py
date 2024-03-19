@@ -1,4 +1,4 @@
-from video_edits import create_video_with_subtitles
+from video_edits import *
 from reddit import get_reddit_posts
 from tts import generate_speech
 from utils import clean_up
@@ -16,6 +16,7 @@ if __name__ == "__main__":
 
     content = get_reddit_posts(subReddit, nPosts)
     generate_speech(content) # TODO edit if changing structure
+    create_word_level_JSON()
     create_video_with_subtitles(
         base_url,
         font,

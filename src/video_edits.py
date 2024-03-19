@@ -21,7 +21,7 @@ def create_word_level_JSON():
     # print(wordlevel_info)
 
     # Store word-level timestamps into JSON file
-    with open('data.json', 'w') as f:
+    with open('../data.json', 'w') as f:
         json.dump(wordlevel_info, f, indent=4)
 
 '''
@@ -203,7 +203,7 @@ def create_video_with_subtitles(
         stroke_width=1.5
         ):
     
-    with open('data.json', 'r') as f:
+    with open('../data.json', 'r') as f:
         wordlevel_info = json.load(f)
 
     input_video = VideoFileClip(base_url)
