@@ -7,13 +7,14 @@ if __name__ == "__main__":
     # Parameters to change with each video
     subReddit = 'LifeProTips'
     nPosts = 1
-    base_url = '../video/base_2.mp4'
+    base_url = '../video/base_1.mp4'
     font = 'Liberation-Serif-Bold'
-    color = 'red'
-    highlight_color = 'red'
+    color = 'white'
+    highlight_color = 'white'
     stroke_color = 'black'
     stroke_width = 1.3
 
+    content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
     # content = get_reddit_posts(subReddit, nPosts)
     # generate_speech(content) # TODO edit if changing structure
     # create_word_level_JSON()

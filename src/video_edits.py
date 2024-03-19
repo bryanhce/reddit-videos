@@ -162,27 +162,27 @@ def create_caption(
         x_pos = x_pos + word_width+ space_width
         line_width = line_width+ word_width + space_width
     # TODO: try remove else block and running, should still work
-    # else:
-    #     # Move to the next line
-    #     x_pos = 0
-    #     y_pos = y_pos+ word_height+10
-    #     line_width = word_width + space_width
+    else:
+        # Move to the next line
+        x_pos = 0
+        y_pos = y_pos+ word_height+10
+        line_width = word_width + space_width
 
-    #     # Store info of each word_clip created
-    #     xy_textclips_positions.append({
-    #         "x_pos":x_pos,
-    #         "y_pos": y_pos,
-    #         "width" : word_width,
-    #         "height" : word_height,
-    #         "word": textJSON['word'],
-    #         "start": textJSON['start'],
-    #         "end": textJSON['end'],
-    #         "duration": duration
-    #     })
+        # Store info of each word_clip created
+        xy_textclips_positions.append({
+            "x_pos":x_pos,
+            "y_pos": y_pos,
+            "width" : word_width,
+            "height" : word_height,
+            "word": textJSON['word'],
+            "start": textJSON['start'],
+            "end": textJSON['end'],
+            "duration": duration
+        })
 
-    #     word_clip = word_clip.set_position((x_pos, y_pos))
-    #     word_clip_space = word_clip_space.set_position((x_pos+ word_width , y_pos))
-    #     x_pos = word_width + space_width
+        word_clip = word_clip.set_position((x_pos, y_pos))
+        word_clip_space = word_clip_space.set_position((x_pos+ word_width , y_pos))
+        x_pos = word_width + space_width
 
     word_clips.append(word_clip)
     word_clips.append(word_clip_space)
@@ -233,7 +233,8 @@ def create_video_with_subtitles(
 
             color_clip = ColorClip(
                             size=(int(max_width * 1.1), int(max_height * 1.1)),
-                            color=(64, 64, 64)
+                            color=(64, 64, 64),
+                            # ismask=True
                             )
             color_clip = color_clip.set_opacity(.6)
             color_clip = color_clip.set_start(obj['start']).set_duration(obj['end'] - obj['start'])
