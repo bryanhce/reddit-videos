@@ -14,9 +14,9 @@ if __name__ == "__main__":
     stroke_color = 'black'
     stroke_width = 1.3
 
-    content = get_reddit_posts(subReddit, nPosts)
-    generate_speech(content) # TODO edit if changing structure
-    create_word_level_JSON()
+    # content = get_reddit_posts(subReddit, nPosts)
+    # generate_speech(content) # TODO edit if changing structure
+    # create_word_level_JSON()
     create_video_with_subtitles(
         base_url,
         font,
