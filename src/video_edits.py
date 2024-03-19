@@ -1,5 +1,5 @@
 from faster_whisper import WhisperModel
-from moviepy.editor import TextClip, CompositeVideoClip, ColorClip, VideoFileClip
+from moviepy.editor import TextClip, CompositeVideoClip, ColorClip, VideoFileClip, AudioFileClip
 import json
 
 def create_word_level_JSON():
@@ -21,7 +21,7 @@ def create_word_level_JSON():
     # print(wordlevel_info)
 
     # Store word-level timestamps into JSON file
-    with open('data.json', 'w') as f:
+    with open('../data.json', 'w') as f:
         json.dump(wordlevel_info, f, indent=4)
 
 '''
@@ -162,27 +162,27 @@ def create_caption(
         x_pos = x_pos + word_width+ space_width
         line_width = line_width+ word_width + space_width
     # TODO: try remove else block and running, should still work
-    else:
-        # Move to the next line
-        x_pos = 0
-        y_pos = y_pos+ word_height+10
-        line_width = word_width + space_width
+    # else:
+    #     # Move to the next line
+    #     x_pos = 0
+    #     y_pos = y_pos+ word_height+10
+    #     line_width = word_width + space_width
 
-        # Store info of each word_clip created
-        xy_textclips_positions.append({
-            "x_pos":x_pos,
-            "y_pos": y_pos,
-            "width" : word_width,
-            "height" : word_height,
-            "word": textJSON['word'],
-            "start": textJSON['start'],
-            "end": textJSON['end'],
-            "duration": duration
-        })
+    #     # Store info of each word_clip created
+    #     xy_textclips_positions.append({
+    #         "x_pos":x_pos,
+    #         "y_pos": y_pos,
+    #         "width" : word_width,
+    #         "height" : word_height,
+    #         "word": textJSON['word'],
+    #         "start": textJSON['start'],
+    #         "end": textJSON['end'],
+    #         "duration": duration
+    #     })
 
-        word_clip = word_clip.set_position((x_pos, y_pos))
-        word_clip_space = word_clip_space.set_position((x_pos+ word_width , y_pos))
-        x_pos = word_width + space_width
+    #     word_clip = word_clip.set_position((x_pos, y_pos))
+    #     word_clip_space = word_clip_space.set_position((x_pos+ word_width , y_pos))
+    #     x_pos = word_width + space_width
 
     word_clips.append(word_clip)
     word_clips.append(word_clip_space)
@@ -203,7 +203,7 @@ def create_video_with_subtitles(
         stroke_width=1.5
         ):
     
-    with open('data.json', 'r') as f:
+    with open('../data.json', 'r') as f:
         wordlevel_info = json.load(f)
 
     input_video = VideoFileClip(base_url)
@@ -246,13 +246,13 @@ def create_video_with_subtitles(
         all_linelevel_splits.append(clip_to_overlay)    
 
     final_video = CompositeVideoClip([input_video] + all_linelevel_splits)
-
+    audio_clip = AudioFileClip("../audio/0.mp3")
     # Set the audio of the final video to be the same as the input video
-    final_video = final_video.set_audio(input_video.audio)
+    final_video = final_video.set_audio(audio_clip)
 
     # TODO: trim the video to be same duration as audio
 
     # Save the final clip as a video file with the audio included
-    final_video.write_videofile("../video/output.mp4", fps=24, codec="libx264", audio_codec="aac")
+    final_video.write_videofile("../video/output.mp4", fps=24, codec="libx264", audio_codec="libmp3lame")
 
     print('Final video successfully generated')

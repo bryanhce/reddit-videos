@@ -2,3 +2,4 @@
 audio
 data.json
 video/output.mp4
+__pycache__
