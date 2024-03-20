@@ -2,7 +2,17 @@ from faster_whisper import WhisperModel
 from moviepy.editor import TextClip, CompositeVideoClip, ColorClip, VideoFileClip, AudioFileClip
 import json
 
-def create_word_level_JSON():
+def create_word_level_JSON(content):
+    '''
+    Returns json that contains information on the duration
+    each word should be displayed on the video.
+
+    Parameters:
+    content: array of tuples where each element is (title, description)
+
+    Returns:
+    Creates a json that contains {word, start, end}
+    '''
     model_size = "medium"
     model = WhisperModel(model_size)
 
@@ -11,10 +21,13 @@ def create_word_level_JSON():
 
     wordlevel_info = []
 
+    # TODO: currently we are using text generated from the transcription of audio
+    # which can contain errors, we need to figure out a way to get consistency 
+    # of the word using content param
     for segment in segments:
         for word in segment.words:
-            # print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word))
-            wordlevel_info.append({'word':word.word,'start':word.start,'end':word.end})
+            wordlevel_info.append({'word':word.word.strip(), 'start':word.start, 'end':word.end})
+            # print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word.strip()))
 
     # Store word-level timestamps into JSON file
     with open('../data.json', 'w') as f:
@@ -31,8 +44,6 @@ def create_caption(
         stroke_width,
     ):
 
-    full_duration = textJSON['end'] - textJSON['start']
-
     word_clips = []
     xy_textclips_positions =[]
 
@@ -46,10 +57,7 @@ def create_caption(
 
     max_line_width = frame_width - 2 * (x_buffer)
 
-    fontsize = int(frame_height * 0.05) #7.5 percent of video height
-
-    space_width = ""
-    space_height = ""
+    fontsize = int(frame_height * 0.05) # to change font size
 
     duration = textJSON['end'] - textJSON['start']
 
@@ -60,15 +68,14 @@ def create_caption(
             color=color,
             stroke_color=stroke_color,
             stroke_width=stroke_width,
-            ).set_start(textJSON['start']).set_duration(full_duration)
+            ).set_start(textJSON['start']).set_duration(duration)
             
-    
     word_clip_space = TextClip(
             " ", 
             font=font,
             fontsize=fontsize,
             color=color
-            ).set_start(textJSON['start']).set_duration(full_duration)
+            ).set_start(textJSON['start']).set_duration(duration)
     
     word_width, word_height = word_clip.size
     space_width, space_height = word_clip_space.size
@@ -90,7 +97,6 @@ def create_caption(
 
         x_pos = x_pos + word_width + space_width
         line_width = line_width + word_width + space_width
-    # TODO: try remove else block and running, should still work
     else:
         # Move to the next line
         x_pos = 0
@@ -116,12 +122,7 @@ def create_caption(
     word_clips.append(word_clip)
     word_clips.append(word_clip_space)
 
-    for highlight_word in xy_textclips_positions:
-        word_clip_highlight = TextClip(highlight_word['word'], font=font, fontsize=fontsize, color=highlight_color, stroke_color=stroke_color,stroke_width=stroke_width).set_start(highlight_word['start']).set_duration(highlight_word['duration'])
-        word_clip_highlight = word_clip_highlight.set_position((highlight_word['x_pos'], highlight_word['y_pos']))
-        word_clips.append(word_clip_highlight)
-
-    return word_clips,xy_textclips_positions
+    return word_clips, xy_textclips_positions
 
 def create_video_with_subtitles(
         base_url,
@@ -154,8 +155,8 @@ def create_video_with_subtitles(
         max_height = 0
 
         for position in positions:
-            x_pos, y_pos = position['x_pos'],position['y_pos']
-            width, height = position['width'],position['height']
+            x_pos, y_pos = position['x_pos'], position['y_pos']
+            width, height = position['width'], position['height']
 
             max_width = max(max_width, x_pos + width)
             max_height = max(max_height, y_pos + height)
@@ -169,17 +170,18 @@ def create_video_with_subtitles(
 
             color_clip = color_clip.set_start(obj['start']).set_duration(obj['end'] - obj['start'])
 
-        clip_to_overlay = CompositeVideoClip([color_clip]+ out_clips)
+        clip_to_overlay = CompositeVideoClip([color_clip] + out_clips)
         clip_to_overlay = clip_to_overlay.set_position("center") # was previously 'bottom'
 
         all_linelevel_splits.append(clip_to_overlay)    
 
-    final_video = CompositeVideoClip([input_video] + all_linelevel_splits)
     audio_clip = AudioFileClip("../audio/0.mp3")
+
+    final_video = CompositeVideoClip([input_video] + all_linelevel_splits)
+    # trim the video to be same duration as audio
+    final_video = final_video.subclip(0, audio_clip.duration)
     # Set the audio of the final video to be the same as the input video
     final_video = final_video.set_audio(audio_clip)
-
-    # TODO: trim the video to be same duration as audio
 
     # Save the final clip as a video file with the audio included
     final_video.write_videofile("../video/output.mp4", fps=24, codec="libx264", audio_codec="libmp3lame")

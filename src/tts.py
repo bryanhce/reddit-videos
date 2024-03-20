@@ -1,4 +1,5 @@
 from gtts import gTTS
+from utils import remove_repeated_punctuations
 
 def generate_speech(texts):
     '''
@@ -14,7 +15,10 @@ def generate_speech(texts):
     for i in range(len(texts)):
         # concat title and content into 1 string
         title, content = texts[i]
-        final_str = title + content
+        raw_str = title + content
+
+        # parse the string to remove unwanted complications
+        final_str = remove_repeated_punctuations(raw_str)
 
         # create a gTTS object
         tts = gTTS(
