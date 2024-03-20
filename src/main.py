@@ -16,9 +16,9 @@ if __name__ == "__main__":
 
     # TODO: short content for testing
     # note: if duration audio generated from text is less then base duration, error
-    # content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
+    content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
 
-    content = get_reddit_posts(subReddit, nPosts)
+    # content = get_reddit_posts(subReddit, nPosts)
     generate_speech(content) # TODO edit if changing structure
     speed_up_tts()
     create_word_level_JSON(content)
