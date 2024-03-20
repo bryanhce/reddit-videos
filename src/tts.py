@@ -1,5 +1,6 @@
+import subprocess
 from gtts import gTTS
-from utils import remove_repeated_punctuations
+from utils import parse_string, remove_repeated_punctuations
 
 def generate_speech(texts):
     '''
@@ -17,8 +18,8 @@ def generate_speech(texts):
         title, content = texts[i]
         raw_str = title + content
 
-        # parse the string to remove unwanted complications
-        final_str = remove_repeated_punctuations(raw_str)
+        # parse the string to remove unwanted complications and errors
+        final_str = parse_string(raw_str)
 
         # create a gTTS object
         tts = gTTS(
@@ -29,3 +30,8 @@ def generate_speech(texts):
         tts.save('../audio/' + str(i) + ".mp3")
 
     print("Text-to-speech conversion complete")
+
+def speed_up_tts():
+    output_audio_file = "../audio/0_sped_up.mp3"
+    ffmpeg_command = ["ffmpeg", "-y", "-i", "../audio/0.mp3", "-filter:a", "atempo=1.5", output_audio_file]
+    subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

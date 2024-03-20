@@ -1,5 +1,5 @@
 .env
 audio
 data.json
-video/output.mp4
+video/output*.mp4
 __pycache__

@@ -1,6 +1,6 @@
 from video_edits import *
 from reddit import get_reddit_posts
-from tts import generate_speech
+from tts import generate_speech, speed_up_tts
 from utils import clean_up
 
 if __name__ == "__main__":
@@ -19,8 +19,9 @@ if __name__ == "__main__":
     content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
 
     # content = get_reddit_posts(subReddit, nPosts)
-    # generate_speech(content) # TODO edit if changing structure
-    # create_word_level_JSON(content)
+    generate_speech(content) # TODO edit if changing structure
+    speed_up_tts()
+    create_word_level_JSON(content)
     create_video_with_subtitles(
         base_url,
         font,
@@ -30,3 +31,5 @@ if __name__ == "__main__":
         stroke_width
     )
     # clean_up()
+    
+    
