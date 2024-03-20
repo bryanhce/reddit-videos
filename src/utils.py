@@ -1,4 +1,8 @@
 import os
+import re
+
+def remove_repeated_punctuations(text):
+    return re.sub(r'([^\w\s])\1+', r'\1', text)
 
 def clean_up():
     '''
