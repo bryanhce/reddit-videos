@@ -7,7 +7,7 @@ if __name__ == "__main__":
     # Parameters to change with each video
     subReddit = 'LifeProTips'
     nPosts = 1
-    base_url = '../video/base_2.mp4'
+    base_url = '../video/base_0m13s.mp4'
     font = '../font/LTSaeada-Black.otf'
     color = 'white'
     highlight_color = 'white'
@@ -16,9 +16,9 @@ if __name__ == "__main__":
 
     # TODO: short content for testing
     # note: if duration audio generated from text is less then base duration, error
-    content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
+    # content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
 
-    # content = get_reddit_posts(subReddit, nPosts)
+    content = get_reddit_posts(subReddit, nPosts)
     generate_speech(content) # TODO edit if changing structure
     speed_up_tts()
     create_word_level_JSON(content)
@@ -26,7 +26,6 @@ if __name__ == "__main__":
         base_url,
         font,
         color,
-        highlight_color,
         stroke_color,
         stroke_width
     )
