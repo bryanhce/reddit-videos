@@ -16,7 +16,7 @@ def create_word_level_JSON(content):
     model_size = "medium"
     model = WhisperModel(model_size)
 
-    segments, info = model.transcribe("../audio/0_sped_up.mp3", word_timestamps=True)
+    segments, info = model.transcribe("../audio/combined_sped_up.mp3", word_timestamps=True)
     segments = list(segments)  # The transcription will actually run here.
 
     wordlevel_info = []
@@ -39,7 +39,6 @@ def create_caption(
         framesize,
         font,
         color,
-        highlight_color,
         stroke_color,
         stroke_width,
     ):
@@ -128,7 +127,6 @@ def create_video_with_subtitles(
         base_url,
         font,
         color,
-        highlight_color,
         stroke_color,
         stroke_width,
         ):
@@ -147,7 +145,6 @@ def create_video_with_subtitles(
                                 frame_size,
                                 font=font,
                                 color=color,
-                                highlight_color=highlight_color,
                                 stroke_color=stroke_color,
                                 stroke_width=stroke_width,
                                 )
@@ -175,7 +172,7 @@ def create_video_with_subtitles(
 
         all_linelevel_splits.append(clip_to_overlay)    
 
-    audio_clip = AudioFileClip("../audio/0_sped_up.mp3")
+    audio_clip = AudioFileClip("../audio/combined_sped_up.mp3")
 
     final_video = CompositeVideoClip([input_video] + all_linelevel_splits)
     # trim the video to be same duration as audio
