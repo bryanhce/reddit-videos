@@ -1,34 +1,20 @@
-from video_edits import *
-from reddit import get_reddit_posts
-from tts import generate_speech, speed_up_tts
-from utils import clean_up
+from rubislices import RubiSlicesFactory
 
 if __name__ == "__main__":
+    factory = RubiSlicesFactory()
+
     # Parameters to change with each video
-    subReddit = 'LifeProTips'
-    nPosts = 1
-    base_url = '../video/base_0m13s.mp4'
-    font = '../font/LTSaeada-Black.otf'
-    color = 'white'
-    highlight_color = 'white'
-    stroke_color = 'black'
-    stroke_width = 2.0
-
-    # TODO: short content for testing
-    # note: if duration audio generated from text is less then base duration, error
-    # content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
-
-    content = get_reddit_posts(subReddit, nPosts)
-    generate_speech(content) # TODO edit if changing structure
-    speed_up_tts()
-    create_word_level_JSON(content)
-    create_video_with_subtitles(
-        base_url,
-        font,
-        color,
-        stroke_color,
-        stroke_width
+    rubiSlice = factory.create(
+        # either OR
+        # subreddit = 'LifeProTips',
+        post_url='https://www.reddit.com/r/AskReddit/comments/147rws8/wedding_photographers_of_reddit_what_was_your',
+        # cannot be both
+        n = 4, # number of comments or 
+        base_url = '../video/base_2m04s.mp4',
+        font_url = '../font/LTSaeada-Bold.otf',
+        color = 'white',
+        stroke_color = 'black',
+        stroke_width = 3.0,
     )
-    # clean_up()
-    
+    rubiSlice.run()
     

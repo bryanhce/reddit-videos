@@ -18,6 +18,34 @@ def parse_string(text):
 
     return formatted_string
 
+def has_tuples(arr):
+    '''
+    Returns a boolean if array contains a tuple
+    '''
+    for item in arr:
+        if isinstance(item, tuple):
+            return True
+    return False
+
+def parse_content_to_str(content):
+    '''
+    Content take on 2 forms
+    1. [("s1", "s2"), ("s3", "s4")]
+    2. ["s1", "s2", "s3", "s4"]
+
+    Return single string.
+    E.g. "s1 s2 s3 s4"
+    '''
+    if has_tuples(content):
+        arr = []
+        for c in content:
+            title, subtitle = c
+            arr.append(title + subtitle)
+        return ' '.join(arr)
+    else:
+        return ' '.join(content)
+
+
 def clean_up():
     '''
     Delete mp3 files in audio
