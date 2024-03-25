@@ -16,7 +16,7 @@ def create_word_level_JSON(content):
     model_size = "medium"
     model = WhisperModel(model_size)
 
-    segments, info = model.transcribe("../audio/combined_sped_up.mp3", word_timestamps=True)
+    segments, info = model.transcribe("../audio/0.mp3", word_timestamps=True)
     segments = list(segments)  # The transcription will actually run here.
 
     wordlevel_info = []
@@ -26,8 +26,15 @@ def create_word_level_JSON(content):
     # of the word using content param
     for segment in segments:
         for word in segment.words:
-            wordlevel_info.append({'word':word.word.strip(), 'start':word.start, 'end':word.end})
-            # print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word.strip()))
+            word_text = word.word.strip()
+            start = word.start * (1 / 1.3) # speeding up the subtitle display
+            end = word.end * (1 / 1.3)
+            wordlevel_info.append({
+                                'word' : word_text, 
+                                'start' : start, 
+                                'end' : end
+                                })
+            # print("[%.2fs -> %.2fs] %s" % (start, end, word_text))
 
     # Store word-level timestamps into JSON file
     with open('../data.json', 'w') as f:
@@ -172,7 +179,7 @@ def create_video_with_subtitles(
 
         all_linelevel_splits.append(clip_to_overlay)    
 
-    audio_clip = AudioFileClip("../audio/combined_sped_up.mp3")
+    audio_clip = AudioFileClip("../audio/0_sped_up.mp3")
 
     final_video = CompositeVideoClip([input_video] + all_linelevel_splits)
     # trim the video to be same duration as audio

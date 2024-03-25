@@ -1,10 +1,12 @@
 import subprocess
 from gtts import gTTS
-from utils import parse_string
+from utils import *
 from moviepy.editor import *
 
 def stitch_audio_files(n):
     '''
+    DEPRECATED
+
     Stitch aduio files generated together into a single file.
     '''
     audio_arr = []
@@ -18,43 +20,39 @@ def stitch_audio_files(n):
     # Export the combined audio
     combined.write_audiofile("../audio/combined.mp3")
 
-
-
 def generate_speech(texts):
     '''
     Creates mp3 files of speech from text and stores in audio folder.
 
     Parameters: 
-    texts: array of tuples (title, content) where all elements
-            are type String
+    texts: takes 2 forms    
+        1. [("s1", "s2"), ("s3", "s4")]
+        2. ["s1", "s2", "s3", "s4"]
     
     Returns:
     No output
-    '''
-    for i in range(len(texts)):
-        # concat title and content into 1 string
-        title, content = texts[i]
-        raw_str = title + content
+    '''        
+    raw_str = parse_content_to_str(texts)
 
-        # parse the string to remove unwanted complications and errors
-        final_str = parse_string(raw_str)
+    # parse the string to remove unwanted complications and errors
+    final_str = parse_string(raw_str)
 
-        # create a gTTS object
-        tts = gTTS(
-                text = final_str,
-                lang='en',
-                tld='com.au' # change accent
-            )
-        tts.save('../audio/' + str(i) + ".mp3")
-    
-    stitch_audio_files(len(texts))
+    # create a gTTS object
+    tts = gTTS(
+            text = final_str,
+            lang='en',
+            tld='com.au' # change accent
+        )
+    # as parse_content_to_str func returns a 
+    # single string, there will only be 1 audio file
+    tts.save('../audio/0.mp3')
 
     print("Text-to-speech conversion complete")
 
 def speed_up_tts():
     '''
-    Speeds up the combined audio file by 1.5x speed.
+    Speeds up the combined audio file by 1.3x speed.
     '''
-    output_audio_file = "../audio/combined_sped_up.mp3"
-    ffmpeg_command = ["ffmpeg", "-y", "-i", "../audio/combined.mp3", "-filter:a", "atempo=1.5", output_audio_file]
+    output_audio_file = "../audio/0_sped_up.mp3"
+    ffmpeg_command = ["ffmpeg", "-y", "-i", "../audio/0.mp3", "-filter:a", "atempo=1.3", output_audio_file]
     subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

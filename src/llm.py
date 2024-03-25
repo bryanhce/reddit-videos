@@ -65,7 +65,7 @@ def generate_caption_cortex(tup):
     context = f"Create short captions with hashtags for a tiktok \
                 video that I can creating. Here is some information \
                 about the video. Keep the captions and hashtags strictly \
-                less than 40 words. Here is information about my video.\n \
+                less than 20 words. Here is information about my video.\n \
                 Title: {tup[0]} \n \
                 Content : {tup[1]}"
 
