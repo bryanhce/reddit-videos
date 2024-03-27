@@ -1,6 +1,24 @@
 import praw
 from decouple import config
 
+class Praw_Reddit_Singleton():
+    '''
+    Singleton class for praw reddit.
+    Used to call reddit api.
+    '''
+    _instance = None
+
+    # new is a method called before init, used to create the instance
+    # cls is like self but for class/ static methods
+    def __new__(cls):
+        if not cls._instance:
+            cls._instance = praw.Reddit(
+                                client_id=config('REDDIT_CLIENT_ID'),
+                                client_secret=config('REDDIT_CLIENT_SECRET'),
+                                user_agent=config('REDDIT_USER_AGENT')
+                            )
+        return cls._instance
+
 def get_reddit_posts(sub_reddit, n):
     '''
     Call Reddit api to retrieve posts from a subreddit.
@@ -12,13 +30,8 @@ def get_reddit_posts(sub_reddit, n):
     Returns:
     Array of tuples where each (title of post, description of post)
     '''
-    # TODO can use singleton pattern for this, let Ritika do?
     # initialize the Reddit API wrapper
-    reddit = praw.Reddit(
-        client_id=config('REDDIT_CLIENT_ID'),
-        client_secret=config('REDDIT_CLIENT_SECRET'),
-        user_agent=config('REDDIT_USER_AGENT')
-    )
+    reddit = Praw_Reddit_Singleton()
 
     # define subreddit you want to fetch posts from
     subreddit = reddit.subreddit(sub_reddit)
@@ -49,11 +62,7 @@ def get_reddit_comments(url, n):
     [title of post, top comment 1, top comment 2, ... top comment n]
     '''
     # initialize the Reddit API wrapper
-    reddit = praw.Reddit(
-        client_id=config('REDDIT_CLIENT_ID'),
-        client_secret=config('REDDIT_CLIENT_SECRET'),
-        user_agent=config('REDDIT_USER_AGENT')
-    )
+    reddit = Praw_Reddit_Singleton()
 
     submission = reddit.submission(url=url)
 

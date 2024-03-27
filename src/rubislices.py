@@ -4,7 +4,7 @@ from tts import generate_speech, speed_up_tts
 from utils import clean_up
 from abc import ABC, abstractmethod
 
-# code follows (pseudo) factory method pattern
+# code follows (pseudo) factory architecture pattern
 
 class RubiSlicesBase(ABC):
     '''
