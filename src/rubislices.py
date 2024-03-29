@@ -1,10 +1,11 @@
 from video_edits import *
 from reddit import get_reddit_posts, get_reddit_comments
-from tts import generate_speech, speed_up_tts
+from tts import generate_audio_files
 from utils import clean_up
 from abc import ABC, abstractmethod
+from image_edits import generate_image
 
-# code follows (pseudo) factory architecture pattern
+# code follows (pseudo) factory design pattern
 
 class RubiSlicesBase(ABC):
     '''
@@ -32,11 +33,14 @@ class Posts(RubiSlicesBase):
 
     def run(self):
         print("Processing Posts from subreddit:", self.subreddit)
-        content = [('short title', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
-        # content = get_reddit_posts(self.subreddit, self.n)
-        generate_speech(content) 
-        speed_up_tts()
-        create_word_level_JSON(content)
+        body = {
+            'thumbnail' : 'subreddit name, LifeProTip',
+            'content' : [('title of post', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
+        }
+        # body = get_reddit_posts(self.subreddit, self.n)
+        generate_audio_files(body)
+        generate_image(body['thumbnail'])
+        create_word_level_JSON(body)
         create_video_with_subtitles(
             self.base_url,
             self.font_url,
@@ -56,11 +60,14 @@ class Comments(RubiSlicesBase):
 
     def run(self):
         print("Processing Comments from post URL:", self.post_url)
-        # content = ['post title', 'comment one hohoho', 'comment 2 tokyo']
-        content = get_reddit_comments(self.post_url, self.n)
-        generate_speech(content) 
-        speed_up_tts()
-        create_word_level_JSON(content)
+        body = {
+            'thumbnail' : 'post title, when was the last time you ate a piece of cake?',
+            'content' : ['comment 1, your so cool man', 'comment 2, i ate that cake yesterday']
+        }
+        # body = get_reddit_comments(self.post_url, self.n)
+        generate_audio_files(body)
+        generate_image(body['thumbnail'])
+        create_word_level_JSON(body)
         create_video_with_subtitles(
             self.base_url,
             self.font_url,

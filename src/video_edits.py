@@ -1,22 +1,30 @@
 from faster_whisper import WhisperModel
-from moviepy.editor import TextClip, CompositeVideoClip, ColorClip, VideoFileClip, AudioFileClip
+from moviepy.editor import TextClip, CompositeVideoClip, ColorClip, VideoFileClip, AudioFileClip, ImageClip
 import json
 
-def create_word_level_JSON(content):
+def get_audio_end_timing(audio_file_path):
+    audio = AudioFileClip(audio_file_path)
+    end_timing = audio.duration
+    return end_timing
+
+def create_word_level_JSON(body):
     '''
     Returns json that contains information on the duration
     each word should be displayed on the video.
 
-    Parameters:
-    content: array of tuples where each element is (title, description)
+    Parameters: Note param not currently in use
+    body: Dictionary of thumbnail text and content which is an
+    array of of tuple or string
 
     Returns:
-    Creates a json that contains {word, start, end}
+    Creates a json that contains {word/phase, start, end}
     '''
     model_size = "medium"
     model = WhisperModel(model_size)
 
-    segments, info = model.transcribe("../audio/0.mp3", word_timestamps=True)
+    offset = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
+
+    segments, info = model.transcribe("../audio/content.mp3", word_timestamps=True)
     segments = list(segments)  # The transcription will actually run here.
 
     wordlevel_info = []
@@ -27,8 +35,8 @@ def create_word_level_JSON(content):
     for segment in segments:
         for word in segment.words:
             word_text = word.word.strip()
-            start = word.start * (1 / 1.3) # speeding up the subtitle display
-            end = word.end * (1 / 1.3)
+            start = word.start * (1 / 1.3) + offset # speeding up the subtitle display
+            end = word.end * (1 / 1.3) + offset
             wordlevel_info.append({
                                 'word' : word_text, 
                                 'start' : start, 
@@ -177,11 +185,23 @@ def create_video_with_subtitles(
         clip_to_overlay = CompositeVideoClip([color_clip] + out_clips)
         clip_to_overlay = clip_to_overlay.set_position("center") # was previously 'bottom'
 
-        all_linelevel_splits.append(clip_to_overlay)    
+        all_linelevel_splits.append(clip_to_overlay)   
 
-    audio_clip = AudioFileClip("../audio/0_sped_up.mp3")
 
-    final_video = CompositeVideoClip([input_video] + all_linelevel_splits)
+    # Path to your image file
+    image_path = "../image/output_image.jpg"
+
+    # Load the image and create an ImageClip
+    duration = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
+    image_clip = ImageClip(image_path, duration=duration)
+
+    # Position the image in the center of the video frame
+    image_clip = image_clip.set_position((0.175, 0.2), relative=True)
+
+    # Path to audio file
+    audio_clip = AudioFileClip("../audio/combined.mp3")
+
+    final_video = CompositeVideoClip([input_video, image_clip.set_start(0)] + all_linelevel_splits)
     # trim the video to be same duration as audio
     final_video = final_video.subclip(0, audio_clip.duration)
     # Set the audio of the final video to be the same as the input video

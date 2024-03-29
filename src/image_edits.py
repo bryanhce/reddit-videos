@@ -42,13 +42,18 @@ def generate_image(text):
 
     image_path = "../image/template.jpg"
     font_path = "../font/LTSaeada-Regular.otf"  
-    font_size = 100
+    font_size = 40 # TODO make this editable so that shorter text appear larger
     output_url = "../image/output_image.jpg"
-    max_line_width = 1500
+    max_line_width = 450
 
     try:
         # Open the image
         image = Image.open(image_path)
+
+        # Resize image to fit video width
+        new_width = image.width // 3 
+        new_height = image.height // 3
+        image = image.resize((new_width, new_height))
 
         # Create a drawing object
         draw = ImageDraw.Draw(image)
@@ -61,19 +66,20 @@ def generate_image(text):
         # print(wrapped_text)
 
         # Set text starting position ie top left
-        x = 200
-        y = 320
+        x = 80
+        y = 100
 
         # Draw each line of text with a slight vertical offset
         for line in wrapped_text:
             draw.text((x, y), line, font=font, fill="black")
             y += font_size  # Adjust y based on your desired line spacing
 
+
         image.save(output_url)
-        print("image generated")
+        print("Image generated!")
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
 # for testing
-# generate_image()
+# generate_image('')

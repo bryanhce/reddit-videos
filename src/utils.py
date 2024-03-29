@@ -27,7 +27,7 @@ def has_tuples(arr):
             return True
     return False
 
-def parse_content_to_str(content):
+def concat_content_to_str(content):
     '''
     Content take on 2 forms
     1. [("s1", "s2"), ("s3", "s4")]
@@ -40,7 +40,7 @@ def parse_content_to_str(content):
         arr = []
         for c in content:
             title, subtitle = c
-            arr.append(title + subtitle)
+            arr.append(title + ' ' + subtitle)
         return ' '.join(arr)
     else:
         return ' '.join(content)
