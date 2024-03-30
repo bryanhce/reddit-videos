@@ -28,7 +28,8 @@ def get_reddit_posts(sub_reddit, n):
     n: number of posts to retrieve from that subreddit
 
     Returns:
-    Array of tuples where each (title of post, description of post)
+    Dictionary of thumbnail text and content which is an
+    array of tuples where each (title of post, description of post)
     '''
     # initialize the Reddit API wrapper
     reddit = Praw_Reddit_Singleton()
@@ -39,15 +40,19 @@ def get_reddit_posts(sub_reddit, n):
     # get the top posts from the subreddit
     top_posts = subreddit.top(limit=n)
 
-    arr = []
+    body = {
+        'thumbnail' : sub_reddit,
+        'content' : []
+    }
+
     # extract relevant fields from Submission object
     for post in top_posts:
         # print(type(post)) # type: Submission
         # print("Title:", post.title)
         # print("Text of post:", post.selftext)
-        arr.append((post.title, post.selftext))
+        body['content'].append((post.title, post.selftext))
     print('Retrieved reddit content')
-    return arr
+    return body
 
 def get_reddit_comments(url, n):
     '''
@@ -58,8 +63,9 @@ def get_reddit_comments(url, n):
     n: number of comments to retrieve from that post
 
     Returns:
-    Array with with each element being a string in the format like
-    [title of post, top comment 1, top comment 2, ... top comment n]
+    Dictionary with title as thumbnail and content as
+    array with with each element being a string in the format like
+    [top comment 1, top comment 2, ... top comment n]
     '''
     # initialize the Reddit API wrapper
     reddit = Praw_Reddit_Singleton()
@@ -67,7 +73,10 @@ def get_reddit_comments(url, n):
     submission = reddit.submission(url=url)
 
     # first element in arr is post title
-    arr = [submission.title]
+    body = {
+        'thumbnail' : submission.title,
+        'content' : []
+    }
 
     submission.comments.replace_more(limit=0)
 
@@ -84,5 +93,5 @@ def get_reddit_comments(url, n):
 
     # Selecting top n comments
     top_n_comments = [comment.body for comment in sorted_comments[0 : n]]
-    arr.extend(top_n_comments)
-    return arr
+    body['content'].extend(top_n_comments)
+    return body

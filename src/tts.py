@@ -3,16 +3,49 @@ from gtts import gTTS
 from utils import *
 from moviepy.editor import *
 
-def stitch_audio_files(n):
+def generate_audio_files(body):
     '''
-    DEPRECATED
+    Creates mp3 files, normal speed and sped up speed,
+    of speech from text and stores in audio folder.
 
-    Stitch aduio files generated together into a single file.
+    Parameters: 
+    body: dictionary of thumbnail and content, 
+    content takes 2 forms    
+        1. [("s1", "s2"), ("s3", "s4")]
+        2. ["s1", "s2", "s3", "s4"]
+    
+    Returns:
+    No output
+    '''
+    THUMBNAIL_STR = 'thumbnail'
+    CONTENT_STR = 'content' 
+    # TODO might be able to use async here
+    parsed_thumbnail = parse_string(body[THUMBNAIL_STR])
+    parsed_content = parse_string(concat_content_to_str(body[CONTENT_STR]))
+    generate_speech(parsed_thumbnail, THUMBNAIL_STR)
+    generate_speech(parsed_content, CONTENT_STR)
+    speed_up_tts(THUMBNAIL_STR)
+    speed_up_tts(CONTENT_STR)
+
+    sped_up_audio_files_to_stitch = [THUMBNAIL_STR, CONTENT_STR]
+    stitch_audio_files(sped_up_audio_files_to_stitch)
+
+    print("Audio files generated!")
+
+def stitch_audio_files(arr_filenames):
+    '''
+    Stitch sped up aduio files generated together into a single file.
+
+    Parameters:
+    arr_filenames: array of file names to stitch
+
+    Returns:
+    No output but store mp3 in audio folder as combined.mp3 
     '''
     audio_arr = []
-    for i in range(n):
+    for i in range(len(arr_filenames)):
         # Load audio files
-        audio_arr.append(AudioFileClip(f"../audio/{i}.mp3"))
+        audio_arr.append(AudioFileClip(f"../audio/{arr_filenames[i]}_sped_up.mp3"))
 
     # Concatenate audio files
     combined = concatenate_audioclips(audio_arr)
@@ -20,39 +53,35 @@ def stitch_audio_files(n):
     # Export the combined audio
     combined.write_audiofile("../audio/combined.mp3")
 
-def generate_speech(texts):
+def generate_speech(string, name):
     '''
-    Creates mp3 files of speech from text and stores in audio folder.
+    Creates mp3 file of speech from text.
 
     Parameters: 
-    texts: takes 2 forms    
-        1. [("s1", "s2"), ("s3", "s4")]
-        2. ["s1", "s2", "s3", "s4"]
+    string : string to be converted into audio
+    name: name of the audio file created
     
     Returns:
-    No output
+    No output but stores mp3 in audio folder.
     '''        
-    raw_str = parse_content_to_str(texts)
-
-    # parse the string to remove unwanted complications and errors
-    final_str = parse_string(raw_str)
-
-    # create a gTTS object
     tts = gTTS(
-            text = final_str,
+            text = string,
             lang='en',
-            tld='com.au' # change accent
+            tld='com.au' # edit to change accent
         )
-    # as parse_content_to_str func returns a 
-    # single string, there will only be 1 audio file
-    tts.save('../audio/0.mp3')
 
-    print("Text-to-speech conversion complete")
+    tts.save(f'../audio/{name}.mp3')
 
-def speed_up_tts():
+def speed_up_tts(name):
     '''
     Speeds up the combined audio file by 1.3x speed.
+
+    Parameters:
+    name: name of the file to be sped up
+
+    Returns:
+    No returns but saves new sped up audio to audio folder.
     '''
-    output_audio_file = "../audio/0_sped_up.mp3"
-    ffmpeg_command = ["ffmpeg", "-y", "-i", "../audio/0.mp3", "-filter:a", "atempo=1.3", output_audio_file]
+    output_audio_file = f"../audio/{name}_sped_up.mp3"
+    ffmpeg_command = ["ffmpeg", "-y", "-i", f"../audio/{name}.mp3", "-filter:a", "atempo=1.3", output_audio_file]
     subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
