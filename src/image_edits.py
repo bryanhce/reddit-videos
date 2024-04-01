@@ -24,12 +24,13 @@ def wrap_text(text, font, max_width, draw):
     lines.append(current_line.strip())
     return lines
 
-def generate_image(text):
+def generate_image(text, font_url):
     '''
     Creates thumbnail for the video.
 
     Parameters:
     text: string to be overlayed on the template image.
+    font_url: url to font file
 
     Returns:
     Does not return anything but saved generated image to 
@@ -41,7 +42,6 @@ def generate_image(text):
     #         some text to make this even longer longer!"
 
     image_path = "../image/template.jpg"
-    font_path = "../font/LTSaeada-Regular.otf"  
     font_size = 40 # TODO make this editable so that shorter text appear larger
     output_url = "../image/output_image.jpg"
     max_line_width = 450
@@ -59,7 +59,7 @@ def generate_image(text):
         draw = ImageDraw.Draw(image)
 
         # Load the font
-        font = ImageFont.truetype(font_path, size=font_size)
+        font = ImageFont.truetype(font_url, size=font_size)
 
         # Wrap the text into multiple lines
         wrapped_text = wrap_text(text, font, max_line_width, draw)

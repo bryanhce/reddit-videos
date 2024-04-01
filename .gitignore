@@ -1,10 +1,6 @@
 .env
 audio
 data.json
-video/output*.mp4
 __pycache__
-video/base_2m04s.mp4
-video/base_1m17s.mp4
-video/base_1m24s.mp4
-video/base_1m05s.mp4
+video
 image/output_image.jpg
