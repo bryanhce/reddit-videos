@@ -1,6 +1,17 @@
 import os
 import re
 
+def remove_punctuation(word):
+    '''
+    Remove trailing punctuation and white spaces
+    from a single string.
+    '''
+    text = word.strip()
+    # Matches leading or trailing punctuation (\W matches non-word characters)
+    punctuation_pattern = r'^\W+|\W+$'  
+    clean_text = re.sub(punctuation_pattern, '', text)
+    return clean_text
+
 def remove_repeated_punctuations(text):
     return re.sub(r'([^\w\s])\1+', r'\1', text)
 
@@ -44,7 +55,6 @@ def concat_content_to_str(content):
         return ' '.join(arr)
     else:
         return ' '.join(content)
-
 
 def clean_up():
     '''

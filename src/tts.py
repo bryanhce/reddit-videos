@@ -2,6 +2,7 @@ import subprocess
 from gtts import gTTS
 from utils import *
 from moviepy.editor import *
+from config import SPEED_MULTIPLIER
 
 def generate_audio_files(body):
     '''
@@ -74,7 +75,7 @@ def generate_speech(string, name):
 
 def speed_up_tts(name):
     '''
-    Speeds up the combined audio file by 1.3x speed.
+    Speeds up the combined audio file by certain speed.
 
     Parameters:
     name: name of the file to be sped up
@@ -83,5 +84,6 @@ def speed_up_tts(name):
     No returns but saves new sped up audio to audio folder.
     '''
     output_audio_file = f"../audio/{name}_sped_up.mp3"
-    ffmpeg_command = ["ffmpeg", "-y", "-i", f"../audio/{name}.mp3", "-filter:a", "atempo=1.3", output_audio_file]
+    ffmpeg_command = ["ffmpeg", "-y", "-i", f"../audio/{name}.mp3",\
+                       "-filter:a", f"atempo={SPEED_MULTIPLIER}", output_audio_file]
     subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

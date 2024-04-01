@@ -1,6 +1,8 @@
 from faster_whisper import WhisperModel
 from moviepy.editor import TextClip, CompositeVideoClip, ColorClip, VideoFileClip, AudioFileClip, ImageClip
 import json
+from config import SPEED_MULTIPLIER
+from utils import remove_punctuation
 
 def get_audio_end_timing(audio_file_path):
     audio = AudioFileClip(audio_file_path)
@@ -34,9 +36,9 @@ def create_word_level_JSON(body):
     # of the word using content param
     for segment in segments:
         for word in segment.words:
-            word_text = word.word.strip()
-            start = word.start * (1 / 1.3) + offset # speeding up the subtitle display
-            end = word.end * (1 / 1.3) + offset
+            word_text = remove_punctuation(word.word)
+            start = word.start * (1 / SPEED_MULTIPLIER) + offset # speeding up the subtitle display
+            end = word.end * (1 / SPEED_MULTIPLIER) + offset
             wordlevel_info.append({
                                 'word' : word_text, 
                                 'start' : start, 
@@ -71,7 +73,7 @@ def create_caption(
 
     max_line_width = frame_width - 2 * (x_buffer)
 
-    fontsize = int(frame_height * 0.055) # to change font size
+    fontsize = int(frame_height * 0.05) # to change font size
 
     duration = textJSON['end'] - textJSON['start']
 
@@ -138,6 +140,18 @@ def create_caption(
 
     return word_clips, xy_textclips_positions
 
+def create_thumbnail():
+    # Path to your image file
+    image_path = "../image/output_image.jpg"
+
+    # Load the image and create an ImageClip
+    duration = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
+    image_clip = ImageClip(image_path, duration=duration)
+
+    # Position the image in the center of the video frame
+    image_clip = image_clip.set_position((0.175, 0.2), relative=True)
+    return image_clip
+
 def create_video_with_subtitles(
         base_url,
         font,
@@ -187,23 +201,16 @@ def create_video_with_subtitles(
 
         all_linelevel_splits.append(clip_to_overlay)   
 
-
-    # Path to your image file
-    image_path = "../image/output_image.jpg"
-
-    # Load the image and create an ImageClip
-    duration = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
-    image_clip = ImageClip(image_path, duration=duration)
-
-    # Position the image in the center of the video frame
-    image_clip = image_clip.set_position((0.175, 0.2), relative=True)
-
     # Path to audio file
     audio_clip = AudioFileClip("../audio/combined.mp3")
 
+    image_clip = create_thumbnail()
+
     final_video = CompositeVideoClip([input_video, image_clip.set_start(0)] + all_linelevel_splits)
+
     # trim the video to be same duration as audio
     final_video = final_video.subclip(0, audio_clip.duration)
+
     # Set the audio of the final video to be the same as the input video
     final_video = final_video.set_audio(audio_clip)
 
