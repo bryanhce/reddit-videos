@@ -42,9 +42,9 @@ def generate_image(text, font_url):
     #         some text to make this even longer longer!"
 
     image_path = "../image/template.jpg"
-    font_size = 40 # TODO make this editable so that shorter text appear larger
+    font_size = 38 # TODO make this editable so that shorter text appear larger
     output_url = "../image/output_image.jpg"
-    max_line_width = 450
+    max_line_width = 460
 
     try:
         # Open the image

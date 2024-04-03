@@ -25,7 +25,7 @@ class RubiSlicesBase(ABC):
         pass
 
     def sub_run(self, body):
-        body = summarise(body) # runs depending on the length of text
+        #summarise(body) # runs depending on the length of text
         generate_audio_files(body)
         generate_image(body['thumbnail'], self.font_url)
         create_word_level_JSON(body)
@@ -65,11 +65,13 @@ class Comments(RubiSlicesBase):
 
     def run(self):
         print("Processing Comments from post URL:", self.post_url)
-        body = {
-            'thumbnail' : 'I thought she took me to the restroom to have intercourse. I was wrong.',
-            'content' : ['I, a female, was about 8 years old at the time and had a new pet for 2 weeks. A goldfish named Ben in a small round aquarium. I loved him so much. My parents liked to party at our house with their friends on weekends. My uncle was always there too and he always overdid it with the alcohol. One Saturday evening I was already asleep in my bed. Suddenly I heard the door open and someone came in. I pretended to be sleeping. I thought the person would walk out again at any moment. I heard strange noises like someone was undoing their belt and taking off their pants. When I heard farting noises, loud moans and someone singing “what shall we do with the drunken sailor”, I couldn’t understand anything. The farts were getting louder and louder and I was starting to get scared. It started to smell disgusting. The person left my room again and I fell asleep at some point. The next morning I heard my mother screaming. I woke up and saw my aquarium full to the brim with shit. My goldfish Ben survived, thank God. To this day I still wonder how. It smelled like hell. We only found out it was my uncle when he did the exact same thing to my cousins spider. I still hate him to this day and whenever I hear the song “What shall we do with the drunken sailor” I get goosebumps.']
-        }
-        # body = get_reddit_comments(self.post_url, self.n)
+        # body = {
+        #     'thumbnail' : 'My girlfriend confessed to cheating on me so I lied and told her I cheated on her.',
+        #     'content' : ['My girlfriend 26 confessed to cheating on me last night, so I told her I’ve been cheating the whole time we’ve been together. I had my suspicions that she’s been cheating as she’s been staying out late and just acting strange in general.\
+        #         Well, when she made her big announcement I replied by saying I’ve been cheating on her for the entirety of our relationship, which isn’t true. I told her I’ve been sleeping with 1 other women consistently and this drove her absolutely insane - like I genuinely thought she was going to do someone rash, like slash my tires or something. But no, she just screamed at me and demanded to know who she was. She went on to say she only cheated once and she was completely inebriated when it happened as if that someone absolves her of any wrongdoing. The audacity.\
+        #         well anyways, I broke up with her and threw her out of my house. I then proceeded to invite the boys over for some bbq. All in all, it was a hilarious experience. I know it’s not a crazy story, but I thought it was funny enough to share.']
+        # }
+        body = get_reddit_comments(self.post_url, self.n)
         self.sub_run(body)
 
 class RubiSlicesFactory:
