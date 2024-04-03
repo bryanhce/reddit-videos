@@ -1,5 +1,8 @@
-from PIL import Image, ImageDraw, ImageFont
+from wand.image import Image
+from wand.drawing import Drawing
+from wand.font import Font
 
+# TODO: decide if we are keeping this unused function in
 def wrap_text(text, font, max_width, draw):
     '''
     Split string into array of string, where each element
@@ -37,49 +40,36 @@ def generate_image(text, font_url):
     image folder as output_image.jpg
     '''
     # for testing
-    # text = "This is a very long long long title for a post, \
-    #         did it wrap around? well it should have, fix it! \
-    #         some text to make this even longer longer!"
+    # text = """This is a very long long long title for a post, did it wrap around? 
+    #     well it should have, fix it! some text to make this even longer longer!"""
 
-    image_path = "../image/template.jpg"
-    font_size = 38 # TODO make this editable so that shorter text appear larger
-    output_url = "../image/output_image.jpg"
-    max_line_width = 460
+    image_path = "../image/rs_caption_template.png"
+    output_url = "../image/output_image.png"
 
-    try:
-        # Open the image
-        image = Image.open(image_path)
+    try:        
+        with Image(filename=image_path) as image:
+            # TODO: add to config file
+            left, top = 120, 175
+            width, height = image.width - (left * 2), image.height - (top * 2)
+            with Drawing() as context:
+                context.fill_color = 'transparent'
+                context.rectangle(left=left, top=top, width=width, height=height)
+                font = Font(font_url, stroke_color="pink", stroke_width=3)
+                context(image)
+                image.caption(text, left=left, top=top, width=width, height=height, font=font, gravity='center')
+            
+            # Resize image to fit video width
+            # TODO: remove this function and use image of correct size
+            new_width = image.width // 3 
+            new_height = image.height // 3
+            resized_image = image.clone()
+            resized_image.resize(new_width, new_height)
 
-        # Resize image to fit video width
-        new_width = image.width // 3 
-        new_height = image.height // 3
-        image = image.resize((new_width, new_height))
-
-        # Create a drawing object
-        draw = ImageDraw.Draw(image)
-
-        # Load the font
-        font = ImageFont.truetype(font_url, size=font_size)
-
-        # Wrap the text into multiple lines
-        wrapped_text = wrap_text(text, font, max_line_width, draw)
-        # print(wrapped_text)
-
-        # Set text starting position ie top left
-        x = 80
-        y = 100
-
-        # Draw each line of text with a slight vertical offset
-        for line in wrapped_text:
-            draw.text((x, y), line, font=font, fill="black")
-            y += font_size  # Adjust y based on your desired line spacing
-
-
-        image.save(output_url)
-        print("Image generated!")
+            resized_image.save(filename=output_url)
+            print("Image generated!")
 
     except Exception as e:
         print(f"An error occurred: {e}")
 
-# for testing
-# generate_image('')
+# # for testing
+# generate_image('', '../font/Bungee-Regular.ttf')
