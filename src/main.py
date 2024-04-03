@@ -8,10 +8,10 @@ if __name__ == "__main__":
         ##############################
         ## either OR cannot be both ##
         # subreddit = 'LifeProTips',
-        post_url='https://www.reddit.com/r/AskReddit/comments/135y5un/when_did_you_realise_that_youre_dating_an_idiot/',
+        post_url='https://www.reddit.com/r/AskReddit/comments/1btvlvx/adults_who_are_married_what_small_things_that_you/',
         ##############################
-        n = 1, # number of comments or posts
-        base_url = '../video/base_0m56s.mp4',
+        n = 3, # number of comments or posts
+        base_url = '../video/base_1m05s.mp4',
         font_url = '../font/Bungee-Regular.ttf',
         color = 'white',
         stroke_color = 'black',

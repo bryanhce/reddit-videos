@@ -73,7 +73,7 @@ def create_caption(
 
     max_line_width = frame_width - 2 * (x_buffer)
 
-    fontsize = int(frame_height * 0.05) # to change font size
+    fontsize = int(frame_height * 0.045) # to change font size
 
     duration = textJSON['end'] - textJSON['start']
 
