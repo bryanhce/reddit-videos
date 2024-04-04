@@ -37,7 +37,7 @@ def generate_image(text, font_url):
 
     Returns:
     Does not return anything but saved generated image to 
-    image folder as output_image.jpg
+    image folder as output_image.png
     '''
     # for testing
     # text = """This is a very long long long title for a post, did it wrap around? 
