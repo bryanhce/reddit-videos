@@ -97,7 +97,7 @@ def create_caption(
 
 def create_thumbnail():
     # Path to your image file
-    image_path = "../image/output_image.jpg"
+    image_path = "../image/output_image.png"
 
     # Load the image and create an ImageClip
     duration = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
