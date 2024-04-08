@@ -60,85 +60,40 @@ def create_caption(
         stroke_width,
     ):
 
-    word_clips = []
     xy_textclips_positions =[]
 
     x_pos = 0
     y_pos = 0
-    line_width = 0  # Total width of words in the current line
-    frame_width = framesize[0]
     frame_height = framesize[1]
 
-    x_buffer = frame_width * 1 / 10
-
-    max_line_width = frame_width - 2 * (x_buffer)
-
-    fontsize = int(frame_height * 0.045) # to change font size
+    font_size = int(frame_height * 0.045) # to change font size
 
     duration = textJSON['end'] - textJSON['start']
 
     word_clip = TextClip(
             textJSON['word'], 
             font=font,
-            fontsize=fontsize, 
+            fontsize=font_size, 
             color=color,
             stroke_color=stroke_color,
             stroke_width=stroke_width,
             ).set_start(textJSON['start']).set_duration(duration)
-            
-    word_clip_space = TextClip(
-            " ", 
-            font=font,
-            fontsize=fontsize,
-            color=color
-            ).set_start(textJSON['start']).set_duration(duration)
     
     word_width, word_height = word_clip.size
-    space_width, space_height = word_clip_space.size
-    if line_width + word_width+ space_width <= max_line_width:
-        # Store info of each word_clip created
-        xy_textclips_positions.append({
-            "x_pos":x_pos,
-            "y_pos": y_pos,
+
+    xy_textclips_positions.append({
+            "x_pos" : x_pos,
+            "y_pos" : y_pos,
             "width" : word_width,
             "height" : word_height,
-            "word": textJSON['word'],
-            "start": textJSON['start'],
-            "end": textJSON['end'],
+            "word" : textJSON['word'],
+            "start" : textJSON['start'],
+            "end" : textJSON['end'],
             "duration": duration
         })
+    word_clip = word_clip.set_position((x_pos, y_pos))
 
-        word_clip = word_clip.set_position((x_pos, y_pos))
-        word_clip_space = word_clip_space.set_position((x_pos + word_width, y_pos))
-
-        x_pos = x_pos + word_width + space_width
-        line_width = line_width + word_width + space_width
-    else:
-        # Move to the next line
-        x_pos = 0
-        y_pos = y_pos + word_height + 10
-        line_width = word_width + space_width
-
-        # Store info of each word_clip created
-        xy_textclips_positions.append({
-            "x_pos":x_pos,
-            "y_pos": y_pos,
-            "width" : word_width,
-            "height" : word_height,
-            "word": textJSON['word'],
-            "start": textJSON['start'],
-            "end": textJSON['end'],
-            "duration": duration
-        })
-
-        word_clip = word_clip.set_position((x_pos, y_pos))
-        word_clip_space = word_clip_space.set_position((x_pos+ word_width , y_pos))
-        x_pos = word_width + space_width
-
-    word_clips.append(word_clip)
-    word_clips.append(word_clip_space)
-
-    return word_clips, xy_textclips_positions
+    return [word_clip], xy_textclips_positions
 
 def create_thumbnail():
     # Path to your image file
@@ -188,16 +143,16 @@ def create_video_with_subtitles(
             max_height = max(max_height, y_pos + height)
 
             color_clip = ColorClip(
-                            size=(int(max_width * 1.1), int(max_height * 1.1)),
+                            size=(max_width , max_height),
                             color=(64, 64, 64)
                             )
             # for adjusting text background transparency
             color_clip = color_clip.set_opacity(0)
 
-            color_clip = color_clip.set_start(obj['start']).set_duration(obj['end'] - obj['start'])
+            color_clip = color_clip.set_start(obj['start']).set_duration(position['duration'])
 
         clip_to_overlay = CompositeVideoClip([color_clip] + out_clips)
-        clip_to_overlay = clip_to_overlay.set_position("center") # was previously 'bottom'
+        clip_to_overlay = clip_to_overlay.set_position("center")
 
         all_linelevel_splits.append(clip_to_overlay)   
 
