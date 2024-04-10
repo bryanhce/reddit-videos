@@ -24,9 +24,9 @@ def create_word_level_JSON(body):
     model_size = "medium"
     model = WhisperModel(model_size)
 
-    offset = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
+    offset = get_audio_end_timing("/code/audio/thumbnail_sped_up.mp3")
 
-    segments, info = model.transcribe("../audio/content.mp3", word_timestamps=True)
+    segments, info = model.transcribe("/code/audio/content.mp3", word_timestamps=True)
     segments = list(segments)  # The transcription will actually run here.
 
     wordlevel_info = []
@@ -47,7 +47,7 @@ def create_word_level_JSON(body):
             # print("[%.2fs -> %.2fs] %s" % (start, end, word_text))
 
     # Store word-level timestamps into JSON file
-    with open('../data.json', 'w') as f:
+    with open('/code/data.json', 'w') as f:
         json.dump(wordlevel_info, f, indent=4)
 
 # Use Moviepy to create an audiogram with word-level highlights as they are spoken
@@ -97,10 +97,10 @@ def create_caption(
 
 def create_thumbnail():
     # Path to your image file
-    image_path = "../image/output_image.png"
+    image_path = "/code/image/output_image.png"
 
     # Load the image and create an ImageClip
-    duration = get_audio_end_timing("../audio/thumbnail_sped_up.mp3")
+    duration = get_audio_end_timing("/code/audio/thumbnail_sped_up.mp3")
     image_clip = ImageClip(image_path, duration=duration)
 
     # Position the image in the center of the video frame
@@ -115,7 +115,7 @@ def create_video_with_subtitles(
         stroke_width,
         ):
     
-    with open('../data.json', 'r') as f:
+    with open('/code/data.json', 'r') as f:
         wordlevel_info = json.load(f)
 
     input_video = VideoFileClip(base_url)
@@ -157,7 +157,7 @@ def create_video_with_subtitles(
         all_linelevel_splits.append(clip_to_overlay)   
 
     # Path to audio file
-    audio_clip = AudioFileClip("../audio/combined.mp3")
+    audio_clip = AudioFileClip("/code/audio/combined.mp3")
 
     image_clip = create_thumbnail()
 
@@ -170,6 +170,6 @@ def create_video_with_subtitles(
     final_video = final_video.set_audio(audio_clip)
 
     # Save the final clip as a video file with the audio included
-    final_video.write_videofile("../video/output.mp4", fps=24, codec="libx264", audio_codec="libmp3lame")
+    final_video.write_videofile("/code/video/output.mp4", fps=24, codec="libx264", audio_codec="libmp3lame")
 
     print('Final video successfully generated')
