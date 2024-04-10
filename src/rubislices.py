@@ -64,14 +64,12 @@ class Comments(RubiSlicesBase):
         self.post_url = post_url
 
     def run(self):
-        print("Processing Comments from post URL:", self.post_url)
-        # body = {
-        #     'thumbnail' : 'My girlfriend confessed to cheating on me so I lied and told her I cheated on her.',
-        #     'content' : ['My girlfriend 26 confessed to cheating on me last night, so I told her I’ve been cheating the whole time we’ve been together. I had my suspicions that she’s been cheating as she’s been staying out late and just acting strange in general.\
-        #         Well, when she made her big announcement I replied by saying I’ve been cheating on her for the entirety of our relationship, which isn’t true. I told her I’ve been sleeping with 1 other women consistently and this drove her absolutely insane - like I genuinely thought she was going to do someone rash, like slash my tires or something. But no, she just screamed at me and demanded to know who she was. She went on to say she only cheated once and she was completely inebriated when it happened as if that someone absolves her of any wrongdoing. The audacity.\
-        #         well anyways, I broke up with her and threw her out of my house. I then proceeded to invite the boys over for some bbq. All in all, it was a hilarious experience. I know it’s not a crazy story, but I thought it was funny enough to share.']
-        # }
-        body = get_reddit_comments(self.post_url, self.n)
+        # print("Processing Comments from post URL:", self.post_url)
+        body = {
+            'thumbnail' : 'My boyfriend talks to me in my sleep',
+            'content' : ['He’s a bit shy and doesn’t express love verbally when I’m awake. The other day, for some reason I decided to fake sleep. 30 minutes in, he checked to make sure I was asleep by saying “I love you”. When I didn’t respond he started humming which he never does so it made me very happy. Then he started talking. It was small at first like “you’re so cute” and “I love snuggling with you.” He then went into detail about all the things he loves about me and how happy I make him and then out of the blue said “I’m going to marry you.” I tried to contain my smile and I started tearing up. Now I fake sleep all the time to hear him talk about things he’s too scared to tell me when I’m awake. I love him.']
+        }
+        # body = get_reddit_comments(self.post_url, self.n)
         self.sub_run(body)
 
 class RubiSlicesFactory:
