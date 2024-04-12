@@ -46,13 +46,13 @@ def stitch_audio_files(arr_filenames):
     audio_arr = []
     for i in range(len(arr_filenames)):
         # Load audio files
-        audio_arr.append(AudioFileClip(f"../audio/{arr_filenames[i]}_sped_up.mp3"))
+        audio_arr.append(AudioFileClip(f"/code/audio/{arr_filenames[i]}_sped_up.mp3"))
 
     # Concatenate audio files
     combined = concatenate_audioclips(audio_arr)
 
     # Export the combined audio
-    combined.write_audiofile("../audio/combined.mp3")
+    combined.write_audiofile("/code/audio/combined.mp3")
 
 def generate_speech(string, name):
     '''
@@ -71,7 +71,7 @@ def generate_speech(string, name):
             tld='com.au' # edit to change accent
         )
 
-    tts.save(f'../audio/{name}.mp3')
+    tts.save(f'/code/audio/{name}.mp3')
 
 def speed_up_tts(name):
     '''
@@ -83,7 +83,7 @@ def speed_up_tts(name):
     Returns:
     No returns but saves new sped up audio to audio folder.
     '''
-    output_audio_file = f"../audio/{name}_sped_up.mp3"
-    ffmpeg_command = ["ffmpeg", "-y", "-i", f"../audio/{name}.mp3",\
+    output_audio_file = f"/code/audio/{name}_sped_up.mp3"
+    ffmpeg_command = ["ffmpeg", "-y", "-i", f"/code/audio/{name}.mp3",\
                        "-filter:a", f"atempo={SPEED_MULTIPLIER}", output_audio_file]
     subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

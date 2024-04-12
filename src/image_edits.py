@@ -43,8 +43,8 @@ def generate_image(text, font_url):
     # text = """This is a very long long long title for a post, did it wrap around? 
     #     well it should have, fix it! some text to make this even longer longer!"""
 
-    image_path = "../image/rs_caption_template.png"
-    output_url = "../image/output_image.png"
+    image_path = "/code/image/rs_caption_template.png"
+    output_url = "/code/image/output_image.png"
 
     try:        
         with Image(filename=image_path) as image:
@@ -72,4 +72,4 @@ def generate_image(text, font_url):
         print(f"An error occurred: {e}")
 
 # # for testing
-# generate_image('', '../font/Bungee-Regular.ttf')
+# generate_image('', '/code/font/Bungee-Regular.ttf')

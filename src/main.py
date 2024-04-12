@@ -11,8 +11,8 @@ if __name__ == "__main__":
         post_url='https://www.reddit.com/r/AskReddit/comments/1btvlvx/adults_who_are_married_what_small_things_that_you/',
         ##############################
         n = 3, # number of comments or posts
-        base_url = '../video/base_1m05s.mp4',
-        font_url = '../font/Bungee-Regular.ttf',
+        base_url = '/code/video/base_0m13s.mp4',
+        font_url = '/code/font/Bungee-Regular.ttf',
         color = 'white',
         stroke_color = 'black',
         stroke_width = 3.0,
