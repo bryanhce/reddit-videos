@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r /code/requirements.txt
 COPY ./audio /code/audio
 COPY ./font /code/font
 COPY ./image /code/image
-COPY ./src /code/src
 COPY ./video /code/video
+COPY ./src /code/src
 
 CMD ["python3", "./src/main.py"]
