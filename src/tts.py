@@ -2,7 +2,8 @@ import subprocess
 from gtts import gTTS
 from utils import *
 from moviepy.editor import *
-from config import SPEED_MULTIPLIER
+from config import SPEED_MULTIPLIER, IS_VOICE_FEMALE
+import pyttsx3
 
 def generate_audio_files(body):
     '''
@@ -54,6 +55,9 @@ def stitch_audio_files(arr_filenames):
     # Export the combined audio
     combined.write_audiofile("/code/audio/combined.mp3")
 
+def convert_wav_to_mp3(wav_file, mp3_file):
+    subprocess.run(["ffmpeg", "-i", wav_file, mp3_file])
+
 def generate_speech(string, name):
     '''
     Creates mp3 file of speech from text.
@@ -64,14 +68,25 @@ def generate_speech(string, name):
     
     Returns:
     No output but stores mp3 in audio folder.
-    '''        
-    tts = gTTS(
-            text = string,
-            lang='en',
-            tld='com.au' # edit to change accent
-        )
+    '''
+    filePathMp3 = f'/code/audio/{name}.mp3'
+    filePathWav = f'/code/audio/{name}.wav'
+    if IS_VOICE_FEMALE:        
+        tts = gTTS(
+                text = string,
+                lang='en',
+                tld='com.au' # edit to change accent
+            )
 
-    tts.save(f'/code/audio/{name}.mp3')
+        tts.save(filePathMp3)
+    else:
+        engine = pyttsx3.init()
+        rate = engine.getProperty('rate')
+        engine.setProperty('rate', rate - 50)
+        engine.save_to_file(string, filePathWav)
+        engine.runAndWait()
+        convert_wav_to_mp3(filePathWav, filePathMp3)
+        engine.stop()
 
 def speed_up_tts(name):
     '''

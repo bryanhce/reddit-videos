@@ -3,3 +3,6 @@
 
 # speed to increase video playback
 SPEED_MULTIPLIER = 1.3
+
+# boolean to toggle gender of generated voice
+IS_VOICE_FEMALE = False
