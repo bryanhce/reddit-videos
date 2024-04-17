@@ -5,7 +5,6 @@ WORKDIR /code
 COPY ./requirements.txt /code/requirements.txt
 
 RUN apt-get update && apt-get install -y imagemagick ffmpeg \
-    && apt-get install libespeak1 -y && apt-get install espeak -y \
     && export MAGICK_HOME="$HOME/ImageMagick-7.1.1" \
     && export PATH="$MAGICK_HOME/bin:$PATH" \
     && export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$MAGICK_HOME/lib" \

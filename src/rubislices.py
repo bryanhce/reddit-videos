@@ -64,18 +64,35 @@ class Comments(RubiSlicesBase):
         self.post_url = post_url
 
     def run(self):
-        # print("Processing Comments from post URL:", self.post_url)
+        print("Processing Comments from post URL:", self.post_url)
         body = {
-            'thumbnail' : 'What are the non-obvious signs of a smart person?',
-            'content' : ['One, they acknowledge areas where they lack knowledge. Two, They’ll listen to the others facts and points and take them into account when giving an objection. Three, Lateral thinking, the ability to think about some subject and then switch gears effortlessly into some other subject and keep them tied together in some way. This can lead to some ambling conversations but thats always fascinating.']
+            'thumbnail' : 'test thumbnails',
+            'content' : ['test content']
         }
         # body = get_reddit_comments(self.post_url, self.n)
         self.sub_run(body)
 
+class Custom(RubiSlicesBase):
+    '''
+    Used when thumbnail and content are curated by user.
+    '''
+    def __init__(self, body, n, base_url, font_url, color, stroke_color, stroke_width):
+        super().__init__(n, base_url, font_url, color, stroke_color, stroke_width)
+        self.body = body
+
+    def run(self):
+        print("Processing custom content")
+        # place content in array so don't have to create
+        # additional steps to process the content
+        self.body['content'] = [self.body['content']]
+        self.sub_run(self.body)
+
 class RubiSlicesFactory:
     @staticmethod
-    def create(subreddit=None, post_url=None, **kwargs):
-        if subreddit and post_url:
+    def create(subreddit=None, post_url=None, body=None, **kwargs):
+        if body:
+            return Custom(body=body, **kwargs) 
+        elif subreddit and post_url:
             raise ValueError("Either subreddit or post_url is provided not both")
         elif subreddit:
             return Posts(subreddit=subreddit, **kwargs)

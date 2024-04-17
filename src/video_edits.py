@@ -60,12 +60,7 @@ def create_caption(
         stroke_width,
     ):
 
-    xy_textclips_positions =[]
-
-    x_pos = 0
-    y_pos = 0
     frame_height = framesize[1]
-
     font_size = int(frame_height * 0.045) # to change font size
 
     duration = textJSON['end'] - textJSON['start']
@@ -79,21 +74,11 @@ def create_caption(
             stroke_width=stroke_width,
             ).set_start(textJSON['start']).set_duration(duration)
     
-    word_width, word_height = word_clip.size
-
-    xy_textclips_positions.append({
-            "x_pos" : x_pos,
-            "y_pos" : y_pos,
-            "width" : word_width,
-            "height" : word_height,
-            "word" : textJSON['word'],
-            "start" : textJSON['start'],
-            "end" : textJSON['end'],
-            "duration": duration
-        })
+    x_pos = 0
+    y_pos = 0
     word_clip = word_clip.set_position((x_pos, y_pos))
 
-    return [word_clip], xy_textclips_positions
+    return [word_clip]
 
 def create_thumbnail():
     # Path to your image file
@@ -124,7 +109,7 @@ def create_video_with_subtitles(
     all_linelevel_splits = []
 
     for obj in wordlevel_info:
-        out_clips, positions = create_caption(
+        out_clips = create_caption(
                                 obj, 
                                 frame_size,
                                 font=font,
@@ -132,26 +117,8 @@ def create_video_with_subtitles(
                                 stroke_color=stroke_color,
                                 stroke_width=stroke_width,
                                 )
-        max_width = 0
-        max_height = 0
 
-        for position in positions:
-            x_pos, y_pos = position['x_pos'], position['y_pos']
-            width, height = position['width'], position['height']
-
-            max_width = max(max_width, x_pos + width)
-            max_height = max(max_height, y_pos + height)
-
-            color_clip = ColorClip(
-                            size=(max_width , max_height),
-                            color=(64, 64, 64)
-                            )
-            # for adjusting text background transparency
-            color_clip = color_clip.set_opacity(0)
-
-            color_clip = color_clip.set_start(obj['start']).set_duration(position['duration'])
-
-        clip_to_overlay = CompositeVideoClip([color_clip] + out_clips)
+        clip_to_overlay = CompositeVideoClip(out_clips)
         clip_to_overlay = clip_to_overlay.set_position("center")
 
         all_linelevel_splits.append(clip_to_overlay)   

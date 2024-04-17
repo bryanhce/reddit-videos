@@ -3,7 +3,9 @@ from gtts import gTTS
 from utils import *
 from moviepy.editor import *
 from config import SPEED_MULTIPLIER, IS_VOICE_FEMALE
-import pyttsx3
+from elevenlabs.client import ElevenLabs
+from elevenlabs import save
+from decouple import config
 
 def generate_audio_files(body):
     '''
@@ -55,9 +57,6 @@ def stitch_audio_files(arr_filenames):
     # Export the combined audio
     combined.write_audiofile("/code/audio/combined.mp3")
 
-def convert_wav_to_mp3(wav_file, mp3_file):
-    subprocess.run(["ffmpeg", "-i", wav_file, mp3_file])
-
 def generate_speech(string, name):
     '''
     Creates mp3 file of speech from text.
@@ -70,7 +69,6 @@ def generate_speech(string, name):
     No output but stores mp3 in audio folder.
     '''
     filePathMp3 = f'/code/audio/{name}.mp3'
-    filePathWav = f'/code/audio/{name}.wav'
     if IS_VOICE_FEMALE:        
         tts = gTTS(
                 text = string,
@@ -80,13 +78,15 @@ def generate_speech(string, name):
 
         tts.save(filePathMp3)
     else:
-        engine = pyttsx3.init()
-        rate = engine.getProperty('rate')
-        engine.setProperty('rate', rate - 50)
-        engine.save_to_file(string, filePathWav)
-        engine.runAndWait()
-        convert_wav_to_mp3(filePathWav, filePathMp3)
-        engine.stop()
+        client = ElevenLabs(
+            api_key=config('ELEVEN_LABS_API_KEY')
+        )
+        audio = client.generate(
+            text=string,
+            voice="Clyde", # or Antoni
+            model="eleven_multilingual_v2"
+        )
+        save(audio, filePathMp3)
 
 def speed_up_tts(name):
     '''
@@ -102,3 +102,5 @@ def speed_up_tts(name):
     ffmpeg_command = ["ffmpeg", "-y", "-i", f"/code/audio/{name}.mp3",\
                        "-filter:a", f"atempo={SPEED_MULTIPLIER}", output_audio_file]
     subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+# generate_speech("what is the best thing about being a cloud engineer? test.", 'test')

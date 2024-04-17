@@ -42,4 +42,4 @@ urllib3==2.2.1
 Wand==0.6.13
 websocket-client==1.7.0
 wheel==0.42.0
-py3-tts==3.5
+elevenlabs==1.0.5
