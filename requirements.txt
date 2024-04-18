@@ -42,3 +42,4 @@ urllib3==2.2.1
 Wand==0.6.13
 websocket-client==1.7.0
 wheel==0.42.0
+elevenlabs==1.0.5

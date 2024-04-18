@@ -64,18 +64,35 @@ class Comments(RubiSlicesBase):
         self.post_url = post_url
 
     def run(self):
-        # print("Processing Comments from post URL:", self.post_url)
+        print("Processing Comments from post URL:", self.post_url)
         body = {
-            'thumbnail' : 'My boyfriend talks to me in my sleep',
-            'content' : ['He’s a bit shy and doesn’t express love verbally when I’m awake. The other day, for some reason I decided to fake sleep. 30 minutes in, he checked to make sure I was asleep by saying “I love you”. When I didn’t respond he started humming which he never does so it made me very happy. Then he started talking. It was small at first like “you’re so cute” and “I love snuggling with you.” He then went into detail about all the things he loves about me and how happy I make him and then out of the blue said “I’m going to marry you.” I tried to contain my smile and I started tearing up. Now I fake sleep all the time to hear him talk about things he’s too scared to tell me when I’m awake. I love him.']
+            'thumbnail' : 'test thumbnails',
+            'content' : ['test content']
         }
         # body = get_reddit_comments(self.post_url, self.n)
         self.sub_run(body)
 
+class Custom(RubiSlicesBase):
+    '''
+    Used when thumbnail and content are curated by user.
+    '''
+    def __init__(self, body, n, base_url, font_url, color, stroke_color, stroke_width):
+        super().__init__(n, base_url, font_url, color, stroke_color, stroke_width)
+        self.body = body
+
+    def run(self):
+        print("Processing custom content")
+        # place content in array so don't have to create
+        # additional steps to process the content
+        self.body['content'] = [self.body['content']]
+        self.sub_run(self.body)
+
 class RubiSlicesFactory:
     @staticmethod
-    def create(subreddit=None, post_url=None, **kwargs):
-        if subreddit and post_url:
+    def create(subreddit=None, post_url=None, body=None, **kwargs):
+        if body:
+            return Custom(body=body, **kwargs) 
+        elif subreddit and post_url:
             raise ValueError("Either subreddit or post_url is provided not both")
         elif subreddit:
             return Posts(subreddit=subreddit, **kwargs)

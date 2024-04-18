@@ -6,9 +6,15 @@ if __name__ == "__main__":
     # Parameters to change with each video
     rubiSlice = factory.create(
         ##############################
-        ## either OR cannot be both ##
+        ## 3 choose 1, no multiples ##
         # subreddit = 'LifeProTips',
-        post_url='https://www.reddit.com/r/AskReddit/comments/1btvlvx/adults_who_are_married_what_small_things_that_you/',
+        # post_url='https://www.reddit.com/r/AskReddit/comments/1btvlvx/adults_who_are_married_what_small_things_that_you/',
+        body = {
+            'thumbnail' : "What is the biggest fail date you have ever had?",
+            'content' : '''
+                        I met a girl in one night at a party. Long word, advantageously
+                        '''
+        },
         ##############################
         n = 3, # number of comments or posts
         base_url = '/code/video/base_0m13s.mp4',

@@ -2,7 +2,10 @@ import subprocess
 from gtts import gTTS
 from utils import *
 from moviepy.editor import *
-from config import SPEED_MULTIPLIER
+from config import SPEED_MULTIPLIER, IS_VOICE_FEMALE
+from elevenlabs.client import ElevenLabs
+from elevenlabs import save
+from decouple import config
 
 def generate_audio_files(body):
     '''
@@ -64,14 +67,26 @@ def generate_speech(string, name):
     
     Returns:
     No output but stores mp3 in audio folder.
-    '''        
-    tts = gTTS(
-            text = string,
-            lang='en',
-            tld='com.au' # edit to change accent
-        )
+    '''
+    filePathMp3 = f'/code/audio/{name}.mp3'
+    if IS_VOICE_FEMALE:        
+        tts = gTTS(
+                text = string,
+                lang='en',
+                tld='com.au' # edit to change accent
+            )
 
-    tts.save(f'/code/audio/{name}.mp3')
+        tts.save(filePathMp3)
+    else:
+        client = ElevenLabs(
+            api_key=config('ELEVEN_LABS_API_KEY')
+        )
+        audio = client.generate(
+            text=string,
+            voice="Clyde", # or Antoni
+            model="eleven_multilingual_v2"
+        )
+        save(audio, filePathMp3)
 
 def speed_up_tts(name):
     '''
@@ -87,3 +102,5 @@ def speed_up_tts(name):
     ffmpeg_command = ["ffmpeg", "-y", "-i", f"/code/audio/{name}.mp3",\
                        "-filter:a", f"atempo={SPEED_MULTIPLIER}", output_audio_file]
     subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+# generate_speech("what is the best thing about being a cloud engineer? test.", 'test')
