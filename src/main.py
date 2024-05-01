@@ -1,27 +1,33 @@
+import json
 from rubislices import RubiSlicesFactory
 
 if __name__ == "__main__":
+    with open('/code/parameters.json') as f:
+        parameters = json.load(f)
+
+    # Access individual parameters
+    body = parameters.get('body')
+    subreddit = parameters.get('subreddit')
+    post_url = parameters.get('post_url')
+    n = parameters.get('n')
+    base_url = parameters.get('base_url')
+    font_url = parameters.get('font_url')
+    color = parameters.get('color')
+    stroke_color = parameters.get('stoke_color')
+    stroke_width = parameters.get('stroke_width')
+
     factory = RubiSlicesFactory()
 
-    # Parameters to change with each video
     rubiSlice = factory.create(
-        ##############################
-        ## 3 choose 1, no multiples ##
-        # subreddit = 'LifeProTips',
-        # post_url='https://www.reddit.com/r/AskReddit/comments/1btvlvx/adults_who_are_married_what_small_things_that_you/',
-        body = {
-            'thumbnail' : "What is the biggest fail date you have ever had?",
-            'content' : '''
-                        I met a girl in one night at a party. Long word, advantageously
-                        '''
-        },
-        ##############################
-        n = 3, # number of comments or posts
-        base_url = '/code/video/base_0m13s.mp4',
-        font_url = '/code/font/Bungee-Regular.ttf',
-        color = 'white',
-        stroke_color = 'black',
-        stroke_width = 3.0,
+        subreddit = subreddit,
+        post_url = post_url,
+        body = body,
+        n = n,
+        base_url = base_url,
+        font_url = font_url,
+        color = color,
+        stroke_color = stroke_color,
+        stroke_width = stroke_width,
     )
     rubiSlice.run()
     
