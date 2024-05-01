@@ -25,7 +25,6 @@ class RubiSlicesBase(ABC):
         pass
 
     def sub_run(self, body):
-        #summarise(body) # runs depending on the length of text
         generate_audio_files(body)
         generate_image(body['thumbnail'], self.font_url)
         create_word_level_JSON(body)
@@ -48,11 +47,11 @@ class Posts(RubiSlicesBase):
 
     def run(self):
         print("Processing Posts from subreddit:", self.subreddit)
-        body = {
-            'thumbnail' : 'subreddit name, LifeProTip',
-            'content' : [('title of post', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
-        }
-        # body = get_reddit_posts(self.subreddit, self.n)
+        # body = {
+        #     'thumbnail' : 'subreddit name, LifeProTip',
+        #     'content' : [('title of post', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
+        # }
+        body = get_reddit_posts(self.subreddit, self.n)
         self.sub_run(body)
 
 class Comments(RubiSlicesBase):
@@ -65,11 +64,12 @@ class Comments(RubiSlicesBase):
 
     def run(self):
         print("Processing Comments from post URL:", self.post_url)
-        body = {
-            'thumbnail' : 'test thumbnails',
-            'content' : ['test content']
-        }
-        # body = get_reddit_comments(self.post_url, self.n)
+        # body = {
+        #     'thumbnail' : 'test thumbnails',
+        #     'content' : ['test content']
+        # }
+        body = get_reddit_comments(self.post_url, self.n)
+        summarise(body) # runs depending on the length of text
         self.sub_run(body)
 
 class Custom(RubiSlicesBase):
@@ -85,6 +85,7 @@ class Custom(RubiSlicesBase):
         # place content in array so don't have to create
         # additional steps to process the content
         self.body['content'] = [self.body['content']]
+        summarise(self.body) # runs depending on the length of text
         self.sub_run(self.body)
 
 class RubiSlicesFactory:

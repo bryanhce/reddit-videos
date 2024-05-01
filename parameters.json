@@ -1,0 +1,16 @@
+{
+    "subreddit" : null,
+    "post_url" : null,
+    "body" : {
+        "thumbnail" : "why does water taste like oil?",
+        "content" : "some content"
+    },
+    "n" : 3,
+    "base_url" : "/code/video/base_0m56s.mp4",
+    "font_url" : "/code/font/Bungee-Regular.ttf" ,
+    "color" : "white",
+    "stroke_color" : "black",
+    "stroke_width" : 3.0,
+    "SPEED_MULTIPLIER" : 1.2,
+    "IS_VOICE_FEMALE" : true
+}
