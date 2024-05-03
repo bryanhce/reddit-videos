@@ -17,7 +17,7 @@ def summarise(body):
 
 def is_video_longer_than_one_min(body):
     '''
-    Estimate that 189 words is the upper limit of 1 min
+    Estimate that 1100 characters is the upper limit of 1 min
 
     Parameters:
     Body: dictionary of thumbnail and content
@@ -38,5 +38,4 @@ def is_video_longer_than_one_min(body):
         for text in body['content']:
             length += len(text)
 
-    return length > 189 
-
+    return length > 1100 
