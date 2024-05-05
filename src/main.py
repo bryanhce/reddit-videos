@@ -13,7 +13,7 @@ if __name__ == "__main__":
     base_url = parameters.get('base_url')
     font_url = parameters.get('font_url')
     color = parameters.get('color')
-    stroke_color = parameters.get('stoke_color')
+    stroke_color = parameters.get('stroke_color')
     stroke_width = parameters.get('stroke_width')
 
     factory = RubiSlicesFactory()
