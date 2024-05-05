@@ -1,8 +1,8 @@
 from transformers import pipeline
-from decouple import config
+
 
 def llm_summarise(article):
-    '''
+    """
     Summarise article to have word count betweem 150 to 170.
 
     Parameters:
@@ -10,12 +10,13 @@ def llm_summarise(article):
 
     Returns:
     String containing summary
-    '''
+    """
     summariser = pipeline("summarization", model="facebook/bart-large-cnn")
 
     summary_arr = summariser(article, max_length=170, min_length=150, do_sample=False)
-    summary_text = summary_arr[0]['summary_text']
+    summary_text = summary_arr[0]["summary_text"]
     return summary_text
+
 
 # for testing
 # summ = """
