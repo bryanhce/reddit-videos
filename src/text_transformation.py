@@ -42,6 +42,17 @@ def replace_banned_words_with_dict(text):
         "threesome": "3sum",
         "dead": "un alive",
         "kill": "un alive",
+        "die" : "pass away",
+        "dying": "passing away",
+        "ass": "bum",
+        "asshole": "bumhole",
+        "til": "today I learnt",
+        "fyi": "for your information",
+        "mil": "mother in law",
+        "fil": "father in law",
+        "lmao": "laughing my butt off",
+        "wtf": "what the heck",
+        "kill myself": "un alive myself",
     }
 
     for banned_word, replacement_word in banned_word_dict.items():
