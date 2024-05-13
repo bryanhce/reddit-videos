@@ -42,9 +42,9 @@ def replace_banned_words_with_dict(text):
         "threesome": "3sum",
         "dead": "un alive",
         "kill": "un alive",
-        "die" : "pass away",
+        "die": "pass away",
         "dying": "passing away",
-        "ass": "bum",
+        # "ass": "bum", # removed as changes passing -> pbuming
         "asshole": "bumhole",
         "til": "today I learnt",
         "fyi": "for your information",
