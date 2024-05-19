@@ -136,6 +136,9 @@ def create_video_with_subtitles(
     # Set the audio of the final video to be the same as the input video
     final_video = final_video.set_audio(audio_clip)
 
+    # Trim the last 0.2s of tts glitch(Still testing)
+    final_video = final_video.subclip(0, -0.2)
+
     # Save the final clip as a video file with the audio included
     final_video.write_videofile("/code/video/output.mp4", fps=24, codec="libx264", audio_codec="libmp3lame")
 

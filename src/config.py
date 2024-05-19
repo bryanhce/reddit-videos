@@ -11,5 +11,8 @@ def get_parameter(param):
 # speed to increase video playback
 SPEED_MULTIPLIER = get_parameter('SPEED_MULTIPLIER')
 
-# boolean to toggle gender of generated voice
-IS_VOICE_FEMALE = get_parameter('IS_VOICE_FEMALE')
+# boolean to toggle source of generated voice
+IS_11LABS_VOICE = get_parameter('IS_11LABS_VOICE')
+
+#voice id to get from eleven labs voice library
+VOICE_ID = get_parameter('VOICE_ID')

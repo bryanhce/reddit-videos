@@ -2,15 +2,16 @@
     "subreddit" : null,
     "post_url" : null,
     "body" : {
-        "thumbnail" : "My husband is a smart man I promise",
-        "content" : "I was out doing yard work and my husband saw my birth control alarm go off on my phone, so he decided to bring it out to me. As he was walking outside he accidentally forgot what he was doing and took my pill (in his defense he takes a lot of vitamins each day). He walks over to me with a panicked look on his face telling me he took it. He asked me if he was going to pass away and what’s going to happen to him. I tell him he'll be fine but he doesn’t believe me and goes to the side yard and tries to make himself throw up. So I sat there just crazy laughing while he was wretching behind me."
+        "thumbnail" : "Test",
+        "content" : "This is a test"
     },
     "n" : 3,
-    "base_url" : "/code/video/base_45s.mp4",
+    "base_url" : "/code/video/base_0m13s.mp4",
     "font_url" : "/code/font/Bungee-Regular.ttf" ,
     "color" : "white",
     "stroke_color" : "black",
     "stroke_width" : 3.0,
     "SPEED_MULTIPLIER" : 1.2,
-    "IS_VOICE_FEMALE" : true
+    "IS_11LABS_VOICE" : false,
+    "VOICE_ID": "ilL4lZNhfCQCwgz3XbY0"
 }
