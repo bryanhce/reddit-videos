@@ -2,8 +2,8 @@ import subprocess
 from gtts import gTTS
 from utils import *
 from moviepy.editor import *
-from config import SPEED_MULTIPLIER, IS_VOICE_FEMALE
-from elevenlabs.client import ElevenLabs
+from config import SPEED_MULTIPLIER, IS_11LABS_VOICE, VOICE_ID
+from elevenlabs.client import ElevenLabs, Voice
 from elevenlabs import save
 from decouple import config
 
@@ -69,7 +69,20 @@ def generate_speech(string, name):
     No output but stores mp3 in audio folder.
     '''
     filePathMp3 = f'/code/audio/{name}.mp3'
-    if IS_VOICE_FEMALE:        
+    if IS_11LABS_VOICE:
+        client = ElevenLabs(
+            api_key=config('ELEVEN_LABS_API_KEY')
+        )
+        audio = client.generate(
+            text=string,
+            voice=Voice(
+                voice_id=VOICE_ID,
+                settings=client.voices.get_settings(VOICE_ID) # get the default settings for the voice
+            ),
+            model="eleven_multilingual_v2"
+        )
+        save(audio, filePathMp3)          
+    else:
         tts = gTTS(
                 text = string,
                 lang='en',
@@ -77,16 +90,7 @@ def generate_speech(string, name):
             )
 
         tts.save(filePathMp3)
-    else:
-        client = ElevenLabs(
-            api_key=config('ELEVEN_LABS_API_KEY')
-        )
-        audio = client.generate(
-            text=string,
-            voice="Clyde", # or Antoni
-            model="eleven_multilingual_v2"
-        )
-        save(audio, filePathMp3)
+        
 
 def speed_up_tts(name):
     '''
