@@ -43,8 +43,8 @@ class RubiSlicesBase(ABC):
         clean_up()
 
     def parse_body_and_run(self, body):
-        self.parsed_body = run_summariser_censor(body)
-        self.sub_run(self.parsed_body)
+        self.body['content'] = run_summariser_censor(body['content'])
+        self.sub_run(self.body)
 
 
 class Posts(RubiSlicesBase):
