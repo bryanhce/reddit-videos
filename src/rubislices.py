@@ -5,7 +5,6 @@ from tts import generate_audio_files
 from utils import clean_up
 from abc import ABC, abstractmethod
 from image_edits import generate_image
-# from text_transformation import transform_text
 
 # code follows (pseudo) factory design pattern
 
