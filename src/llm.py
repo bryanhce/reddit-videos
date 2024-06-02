@@ -1,21 +1,54 @@
-from transformers import pipeline
+# from transformers import pipeline
+from langchain_cohere import ChatCohere
+from langchain.chains import SequentialChain, LLMChain
+from langchain.prompts.chat import ChatPromptTemplate
+from decouple import config
+from utils import get_prompt_templates
 
-
-def llm_summarise(article):
-    """
-    Summarise article to have word count betweem 150 to 170.
+def run_summariser_censor(body):
+    '''
+    Summarises and censors toxic words within post body using Cohere LLM.
 
     Parameters:
-    article: string to be summarised
+    Post body to be summarised and censored.
 
     Returns:
-    String containing summary
-    """
-    summariser = pipeline("summarization", model="facebook/bart-large-cnn")
+    The summarised and cleaned text.
+    '''
+    llm = ChatCohere(cohere_api_key=config('COHERE_API_KEY'))
+    summariser_template, censor_template = get_prompt_templates()
 
-    summary_arr = summariser(article, max_length=170, min_length=150, do_sample=False)
-    summary_text = summary_arr[0]["summary_text"]
-    return summary_text
+    summariser_prompt = ChatPromptTemplate.from_template(template=summariser_template)
+    summariser_chain = LLMChain(llm=llm, prompt=summariser_prompt, output_key='summarised_text')
+
+    censor_prompt = ChatPromptTemplate.from_template(censor_template)
+    censor_chain = LLMChain(llm=llm, prompt=censor_prompt, output_key='final_text')
+
+    overall_chain = SequentialChain(
+        chains=[summariser_chain, censor_chain],
+        input_variables=['input'],
+        output_variables=['summarised_text', 'final_text'],
+        verbose=True)
+
+    print(overall_chain(body))
+    res = overall_chain(body)['final_text']
+    return res
+
+# def llm_summarise(article):
+#     """
+#     Summarise article to have word count betweem 150 to 170.
+
+#     Parameters:
+#     article: string to be summarised
+
+#     Returns:
+#     String containing summary
+#     """
+#     summariser = pipeline("summarization", model="facebook/bart-large-cnn")
+
+#     summary_arr = summariser(article, max_length=170, min_length=150, do_sample=False)
+#     summary_text = summary_arr[0]["summary_text"]
+#     return summary_text
 
 
 # for testing
