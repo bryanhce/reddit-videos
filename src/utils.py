@@ -66,6 +66,9 @@ def clean_up():
             os.remove(os.path.join(folder_path, file))
 
 def get_prompt_templates():
+    '''
+    Define prompt templates for summariser and censor chains
+    '''
     SUMMARISER_TEMPLATE = '''
     Summarise the text WITHOUT CHANGING THE MEANING OF THE TEXT IN ANY WAY.
     The new summary should be at least 140 words long, NO LESS THAN 140 WORDS.
