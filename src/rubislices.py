@@ -1,10 +1,11 @@
+from llm import run_summariser_censor
 from video_edits import *
 from reddit import get_reddit_posts, get_reddit_comments
 from tts import generate_audio_files
 from utils import clean_up
 from abc import ABC, abstractmethod
 from image_edits import generate_image
-from text_transformation import transform_text
+# from text_transformation import transform_text
 
 # code follows (pseudo) factory design pattern
 
@@ -41,6 +42,10 @@ class RubiSlicesBase(ABC):
         )
         clean_up()
 
+    def parse_body_and_run(self, body):
+        self.parsed_body = run_summariser_censor(body)
+        self.sub_run(self.parsed_body)
+
 
 class Posts(RubiSlicesBase):
     """
@@ -60,7 +65,7 @@ class Posts(RubiSlicesBase):
         #     'content' : [('title of post', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
         # }
         body = get_reddit_posts(self.subreddit, self.n)
-        self.sub_run(body)
+        self.parse_body_and_run(body)
 
 
 class Comments(RubiSlicesBase):
@@ -81,7 +86,7 @@ class Comments(RubiSlicesBase):
         #     'content' : ['test content']
         # }
         body = get_reddit_comments(self.post_url, self.n)
-        self.sub_run(body)
+        self.parse_body_and_run(body)
 
 
 class Custom(RubiSlicesBase):
@@ -98,8 +103,8 @@ class Custom(RubiSlicesBase):
         # place content in array so don't have to create
         # additional steps to process the content
         self.body["content"] = [self.body["content"]]
-        transform_text(self.body)
-        self.sub_run(self.body)
+        # transform_text(self.body)
+        self.parse_body_and_run(self.body)
 
 
 class RubiSlicesFactory:

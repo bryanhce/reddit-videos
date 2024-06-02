@@ -64,3 +64,45 @@ def clean_up():
     for file in os.listdir(folder_path):
         if file.endswith(".mp3"):
             os.remove(os.path.join(folder_path, file))
+
+def get_prompt_templates():
+    SUMMARISER_TEMPLATE = '''
+    Summarise the text WITHOUT CHANGING THE MEANING OF THE TEXT IN ANY WAY.
+    The new summary should be at least 140 words long, NO LESS THAN 140 WORDS.
+    Here is the text : {input}
+    '''
+
+    CENSOR_TEMPLATE = '''
+        If the input contains profanities, racial slurs
+        or any sexual language, you are to REPLACE EACH TOXIC WORD with a benign
+        word OF SAME MEANING AND NUANCE. In addition, these are some word mappings
+        that you can use to replace some words when applicable.
+
+        "cigarette": "puff",
+        "fuck": "fk",
+        "gun": "pew pew",
+        "pussy": "kitty",
+        "cunt": "cant",
+        "sex": "segg",
+        "thicc": "large",
+        "thick": "large",
+        "lesbian": "less",
+        "gay": "happy",
+        "queer": "confused",
+        "shit": "crap",
+        "disabled": "not abled",
+        "threesome": "3sum",
+        "dead": "un alive",
+        "kill": "un alive",
+        "die": "pass away",
+        "dying": "passing away",
+        "asshole": "bumhole",
+        "kill myself": "un alive myself",
+
+        You CANNOT CHANGE THE SENTENCE IN
+        ANYOTHER WAY EXCEPT REPLACING THE TOXIC WORD.
+
+        Here is the input text : {summarised_text}
+        '''
+    
+    return SUMMARISER_TEMPLATE, CENSOR_TEMPLATE
