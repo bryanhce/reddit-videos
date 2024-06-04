@@ -1,4 +1,4 @@
-from llm import run_summariser_censor
+from llm import summarise_and_censor
 from video_edits import *
 from reddit import get_reddit_posts, get_reddit_comments
 from tts import generate_audio_files
@@ -29,6 +29,7 @@ class RubiSlicesBase(ABC):
         pass
 
     def sub_run(self, body):
+        body['content'] = summarise_and_censor(body['content'])
         generate_audio_files(body)
         generate_image(body["thumbnail"], self.font_url)
         create_word_level_JSON(body)
@@ -40,10 +41,6 @@ class RubiSlicesBase(ABC):
             self.stroke_width,
         )
         clean_up()
-
-    def parse_body_and_run(self, body):
-        self.body['content'] = run_summariser_censor(body['content'])
-        self.sub_run(self.body)
 
 
 class Posts(RubiSlicesBase):
@@ -64,7 +61,7 @@ class Posts(RubiSlicesBase):
         #     'content' : [('title of post', 'advantageous magic (potatoes) rizz, ice cream! mother??')]
         # }
         body = get_reddit_posts(self.subreddit, self.n)
-        self.parse_body_and_run(body)
+        self.sub_run(body)
 
 
 class Comments(RubiSlicesBase):
@@ -85,7 +82,7 @@ class Comments(RubiSlicesBase):
         #     'content' : ['test content']
         # }
         body = get_reddit_comments(self.post_url, self.n)
-        self.parse_body_and_run(body)
+        self.sub_run(body)
 
 
 class Custom(RubiSlicesBase):
@@ -103,7 +100,7 @@ class Custom(RubiSlicesBase):
         # additional steps to process the content
         self.body["content"] = [self.body["content"]]
         # transform_text(self.body)
-        self.parse_body_and_run(self.body)
+        self.sub_run(self.body)
 
 
 class RubiSlicesFactory:
